@@ -1,0 +1,213 @@
+## El proyecto final del módulo 2
+
+Consiste en construir un autómata celular. Dicho autómata deberá cumplir los siguientes requerimientos:
+
+1. Deberá contar con un tablero de dos dimensiones de tamaño fijo.
+2. A cada elemento del tablero se le llamará celda.
+3. En un estado inicial, cada una de las celdas de un tablero caerá en exactamente uno de los siguientes tres estados:
+    1. Contiene un animal
+    2. Contiene una planta
+    3. Está vacía
+4. Se deberá representar el paso de cada unidad de tiempo de alguna manera visible hacia el espectador.
+   Se deja a consideración del programador dicha decisión.
+5. Cada planta tendrá un nivel de energía. Dicho nivel de energía avanzará conforme avanza el tiempo
+   hasta llegar a un máximo.
+6. Cada animal tendrá un nivel de energía y una edad.
+7. Los animales se irán moviendo por cada unidad de tiempo hacia una celda vecina aleatoria.
+8. Las plantas no se moverán a lo largo del juego.
+9. Una vez que el animal se ha movido, este puede caer en uno de los siguientes casos:
+    1. Se mueva hacia una celda vacía: se resta una unidad de energía al animal y no sucede nada más.
+    2. Se mueve hacia una celda que contiene una planta: se resta una unidad de energía al animal,
+       posteriormente el animal come de esa planta, por lo tanto absorbe una cantidad de energía de ella.
+       Esa misma cantidad de energía se le resta a la energía de la planta.
+    3. Se mueve hacia una celda en la cual coincide con otro animal: se resta una unidad de energía
+       al animal, posteriormente los animales se reproducen, esto significa que se creará una cría en
+       una celda vecina vacía con un nivel fijo de energía determinado por el programador.
+       Después de una reproducción se le restará un cantidad fija de energía a ambos animales.
+       En el caso de que no exista una celda disponible para la cría, no se lleva a cabo la reproducción.
+10. Un animal muere cuando se alcanza al menos una de las siguientes situaciones:
+    1. Se ha terminado la energía del animal.
+    2. Ha alcanzado su edad máxima.
+11. Cada planta aumentará su nivel de energía por cada unidad de tiempo.
+12. Cuando un animal o planta han alcanzado su nivel máximo de energía no pasa nada adicional,
+    simplemente ya no sigue creciendo y su energía se mantiene en el máximo.
+13. El autómata deberá validar que todo movimiento o creación de animales se realiza dentro del tablero,
+    sin rebasar los bordes de este.
+14. El programador es libre de decidir si el autómata se definirá con la vecindad de Moore o la vecindad
+    de Von Neumann. Sin embargo se recomienda iniciar con esta última ya que resultará en una
+    implementación más simple.
+15. El programador es libre de decidir si el tablero será finito, periódico o infinito. Sin embargo
+    se sugiere iniciar implementando un tablero finito ya que es la opción más simple. En un tablero
+    finito, las celdas vecinas solo incluyen las que existen dentro del tablero y no se considerarán otras.
+16. Es necesario que exista una clase llamada *Configuracion*. En ella se podrán determinar diferentes
+    parámetros para experimentar cómo se comporta el autómata en diversos escenarios.
+17. En cada unidad de tiempo se deberán obtener y almacenar en un archivo de texto csv las siguientes
+    estadísticas sobre el autómata, separadas por punt y coma ; ****:
+    1. Número de plantas
+    2. Número de animales
+    3. Número de nacimientos
+    4. Número de muertes
+    5. Eventos
+
+    Ejemplo de archivo de texto:
+
+    Tiempo;Animales;Plantas;Nacimientos;Muertes;Eventos
+    1;10;20;0;0;tablero inicial
+    2;11;18;1;0;Nacimiento en celda [2,4] / Muere planta en [1,3] / Muere planta en [0,1]
+    3;10;18;0;1;Muere animal en [7,1]
+
+    -------------------------------------------------------------
+
+RANDOM:
+o tambien funciona:
+int random_coord = (int)Math.floor(Math.random() * (1 - (-1) + 1) + (-1));
+coord += random_coord;
+coord = (coord > orientacion-1) ? coord-1 : coord;
+coord = (coord < 0) ? coord+1 : coord;
+return coord;
+
+    /* creacion seres
+           numeroCharAnimal = 65;  // codigo ascii de letra 'A'
+            int i = 0; int j = 0;
+            for (Animal animal : animales) {
+                animal = new Animal(11+i++,2+j++, (char)(numeroCharAnimal++));
+                animales.add(animal);
+            }  // for animales
+            numeroCharPlanta = 111; // codigo ascii de letra 'o'
+            i = 0; j = 0;
+            for (Planta planta : plantas) {
+                planta = new Planta(9+i++,2+j++, (char)(numeroCharPlanta++));
+                plantas.add(planta);
+            }  // for plantas*/
+
+
+            static void restarUnidadEnergiaDeAnimales()  {
+                    for (Animal animal : animales) {
+                        int energiaDeAnimal = animal.getEnergia();
+                        if (energiaDeAnimal > 0)
+                            animal.setEnergia(energiaDeAnimal-1);
+                    }  // for
+                }  // method
+
+            static void AgregarEnergiaATodasLasPlantas() {
+                        for (int lugarEnLista = 0; lugarEnLista < Lista.plantas.size(); lugarEnLista++) {
+                            Planta.agregarEnergia(lugarEnLista);
+                        } // end for
+                    } // method
+
+            /*
+                static void MoverUnaCeldaTodosLosAnimales() {
+                    for (Animal a : Lista.animales) {
+                        var animal = Animal.moverUnAnimal(a);
+                        if (animal.getEnergia() > 0) {
+                            Lista.consecuenciasDeUnMovimiento(animal);
+                            animal.setEnergia(animal.getEnergia()-1);
+                        }  // if
+                    } // end for
+                } // method*/
+
+                /*
+         public static Animal moverUnAnimal(int posicionLista) {
+               Animal animalMoviente = Lista.getAnimal(posicionLista);
+               int nuevoX = Random.cambiarCoordenadaDeAnimal(Ajustes.largoTablero, animalMoviente.getX());
+               int nuevoY = Random.cambiarCoordenadaDeAnimal(Ajustes.altoTablero, animalMoviente.getY());
+               animalMoviente.setX(nuevoX);
+               animalMoviente.setY(nuevoY);
+               Lista.setAnimal(posicionLista, animalMoviente);
+               // si su energia es cero sera un cadaver hasta que el validador lo elimine
+               return animalMoviente;
+         } // method*/
+
+         /*    public static void agregarEnergia(int posicionLista) {
+                 Planta plantaCreciente = Lista.getPlanta(posicionLista);
+                 int energiaDeEstaPlanta = plantaCreciente.getEnergia();
+                 if (energiaDeEstaPlanta <= Ajustes.energiaTopePlanta)
+                     plantaCreciente.setEnergia(energiaDeEstaPlanta + 1);
+             }  // method*/
+
+             //      int[][] valor = new int[2][4];
+             //      for (int indice=0; indice<4; indice++)
+
+             class HelloWorld {
+                 public static void main(String[] args)
+                 {
+                     int a[] = { 1, 13, 4, 1, 41, 31, 31, 4, 13, 2 };
+
+                     // put all elements in arraylist
+                     ArrayList<Integer> aa = new ArrayList();
+                     for (int i = 0; i < a.length; i++) {
+                         aa.add(a[i]);
+                     }
+
+                     HashMap<Integer, Integer> h = new HashMap();
+
+                     // counting occurrence of numbers
+                     for (int i = 0; i < aa.size(); i++) {
+                         h.putIfAbsent(aa.get(i), Collections.frequency(
+                                                      aa, aa.get(i)));
+                     }
+                     System.out.println(h);
+                 }
+             }
+
+                // static boolean estaCeldaEstaDentro(int coord1, int coord2) {
+                //     return ((coord1 >= 0) && (coord1 < Ajustes.largoTablero)
+                //             && (coord2 >= 0) && (coord2 < Ajustes.altoTablero));
+                // } // method
+
+
+           // las celdas Moore solo deberán usarse si tambien se usan las Von Neumann
+                        if (x > 0 && y > 0) vecinosMoore.add(new int[x-1][y-1]);
+                        if (x > 0  && y < Ajustes.largoTablero-1) vecinosMoore.add(new int[x-1][y+1]);
+                        if (x < Ajustes.largoTablero-1 && y > 0) vecinosMoore.add(new int[x+1][y-1]);
+                        if (x < Ajustes.largoTablero-1 && y < Ajustes.largoTablero-1) vecinosMoore.add(new int[x+1][y+1]);
+
+                /*    public void cargarDibujo() {
+                        switch (seresVivos.size()) {
+                            case 0 : this.dibujo = Tablero.CHAR_NULO; break;
+                            case 1 : this.dibujo = seresVivos.get(0).getDibujo(); break;  // el primero de la lista
+                            case 2 : this.dibujo = '2'; break;
+                            case 3 : this.dibujo = '3'; break;
+                            case 4 : this.dibujo = '4'; break;
+                           default: this.dibujo = 'X'; // mas de 4 seres
+                        } // switch
+                    } // method
+
+
+          int cambiarCoordenadaVonNeu(int tope, int coord) {
+             Destino posicion;
+                 //    while (it.hasNext()) {
+                          posicion = it.next();
+                  //   } // while
+
+       static enum Destino {
+            haciaUnLado,
+            haciaElOtro
+        } // enum
+        //
+        static List<Destino> posiciones = Arrays.asList(Destino.values());
+        static Set<Destino> posicionesAleatorias = new HashSet<>(posiciones);
+        static Iterator<Destino> it = posicionesAleatorias.iterator();
+
+        //  posicionesAleatorias.add(Destino.haciaUnLado);
+        //   posicionesAleatorias.add(Destino.haciaElOtro);
+        //  Destino posicion = Destino.haciaUnLado;
+        // if (it.hasNext()) posicion = it.next();
+        //  else System.out.println("MAL");
+        //  return (posicion.equals(Destino.haciaElOtro)) ? coord-- : coord++;
+        OTRA FORMA:
+            //   Set<Destino> posicionesAleatorias = new HashSet<>(posiciones);
+            List<Destino> posiciones = Arrays.asList(Destino.values());
+            Collections.shuffle(posiciones);
+            Destino ord = posiciones.get(0);
+                    switch (ord) {
+                case norte : coord = (); break;
+                case sur :  break;
+                case este :  break;
+                case oeste :  break;
+            } // switch
+
+            /* boolean elNuevoXdebeAumentar = Random.arrojarMonedaAlAire();
+                      if (elNuevoXdebeAumentar) nuevoX++; else nuevoX--;
+                      if (nuevoX > Ajustes.largoTablero-1 || nuevoX < 0)
+                            nuevoX = viejoX;  // rebote contra bordes*/
