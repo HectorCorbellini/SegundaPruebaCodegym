@@ -14,16 +14,8 @@ public class Salida {
         eventos.append("/").append(evento).append(" ");
     } // method
 
-    static void reiniciarEventos() {
-        eventos.setLength(0);
-    } // method
-    static void reiniciarVariables() {
-        nacimientos = 0;
-        muertes = 0;
-    } // method
-
     static BufferedWriter iniciarCSV()  {
-      //  String rutaSalida = "/storage/emulated/0/Documents/CSV.txt";
+  //      String rutaSalida = "/storage/emulated/0/Documents/CSV.txt";
         String rutaSalida = "/home/uko/Documentos/CSV.txt";
         BufferedWriter buffParaGuardar = null;
         try {
@@ -36,11 +28,32 @@ public class Salida {
         return buffParaGuardar;
     }  // method
 
+    static void hacerEstadistica(int momentos, BufferedWriter bufferCSV)  {
+    String estadistica = Ajustes.traerEstadistica(momentos, Lista.animales.size(), Lista.plantas.size());
+    guardarArchivoCSV(bufferCSV, estadistica);
+    reiniciarVariables();
+    }  // method
+
+    static void reiniciarVariables() {
+        eventos.setLength(0);
+        nacimientos = 0;
+        muertes = 0;
+    } // method
+
     static void guardarArchivoCSV(BufferedWriter buffParaGuardar, String estadistica) {
         try {
             buffParaGuardar.write(estadistica);  // añado al archivo la linea
             buffParaGuardar.newLine();
         } catch (IOException e) { throw new RuntimeException(e); }
+    }  // method
+
+    static void procesosDeCierre(int momentos, BufferedWriter bufferCSV)  {
+        try {
+            bufferCSV.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);  }
+        if (momentos == Ajustes.maxTiempo) System.out.println("Tiempo agotado.");
+        else System.out.println("La vida se desequilibró.");
     }  // method
 
 } // class

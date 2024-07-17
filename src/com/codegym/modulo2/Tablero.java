@@ -4,11 +4,10 @@ public class Tablero {
     public static final char CHAR_NULO = '.';
     static final Celda[][] tablero = new Celda[Ajustes.largoTablero][Ajustes.altoTablero];
 
-    static void cargarloVacio() {
+    static void cargarloVacio() {  // REESCRIBIRLO CON toString REHECHO
         for (int x = 0; x < Ajustes.largoTablero; x++)
             for (int y = 0; y < Ajustes.altoTablero; y++) {
                 Celda celda = new Celda(x,y);
-                celda.iniciarSeresVivos(); // VER SI DE VERDAD SIRVE
                 tablero[x][y] = celda;
             } // for
     } // cargarlo
@@ -16,10 +15,9 @@ public class Tablero {
     static void agregar (Ser ser) {
         int x = ser.getX();
         int y = ser.getY();
-  //      tablero[x][y].setSerVivo(ser);
-        Celda celda = tablero[x][y];
-        celda.setSerVivo(ser);
-        tablero[x][y] = celda;
+        tablero[x][y].setSerVivo(ser);
+ //       es lo mismo que decir:  Celda celda = tablero[x][y];
+ //         celda.setSerVivo(ser);  tablero[x][y] = celda;
     } // agregar
 
     static void mostrarlo() {

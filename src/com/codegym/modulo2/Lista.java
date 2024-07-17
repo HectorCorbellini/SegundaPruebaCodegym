@@ -19,14 +19,10 @@ public class Lista {
 
     static void crearListasDeSeres()  {
         // creacion de plantas y animales, se hace solamente una vez
-        // estos dos for se pueden unificar en un método con wildcard, pero si se hace eso
-        // se dificulta dar independencia de comportamiento a las plantas despues
-        // ver como quedaría ese método en los comentarios
-        // AÑADIR QUE GUARDE EL SER EN LA CELDA PARA LAS OTRAS RUTINAS
         numeroCharAnimal = 65;  // codigo ascii de letra 'A'
         for (int i = 0; i < Ajustes.cantidadInicialAnimales; i++) {
-            int x = 0+i;
-            int y = 0+i;  // LUEGO RANDOMIZAR Y HOMOGENEIZAR
+            int x = 2+i;
+            int y = 2+i;  // LUEGO TABLEAR Y HOMOGENEIZAR
             char dibujo = (char)(numeroCharAnimal++);
             Animal animal = new Animal(x,y,dibujo);
             animales.add(animal);
@@ -38,14 +34,17 @@ public class Lista {
         }  // for plantas
     }  // crearSeres
 
-    static void agregarLosSeresAlTablero() {
+    static void agregarLosAnimalesAlTablero () {
         if (animales.size() > 0)
-            for (Animal animal : Lista.animales) {
+            for (Animal animal : animales) {
                 Tablero.agregar(animal);
             } // for
         else Salida.evento("no hay animales");
+    }  // method
+
+    static void agregarLasPlantasAlTablero() {
         if (plantas.size() > 0)
-            for (Planta planta : Lista.plantas) {  // CAMBIAR
+            for (Planta planta : plantas) {  // CAMBIAR
                 Tablero.agregar(planta);
             } // for
         else Salida.evento("no hay plantas");
@@ -130,3 +129,23 @@ public class Lista {
     } // method
 
 } // class
+
+/*  NOTAS:
+static void crearListasDeSeres()  {
+  aqui los dos for se pueden unificar en un método con wildcard, pero si se hace eso
+  se dificulta dar independencia de comportamiento a las plantas despues
+  ver como quedaría ese método en los comentarios
+
+  static void agregarLosSeresAlTablero() {
+        if (animales.size() > 0)
+            for (Animal animal : animales) {
+                Tablero.agregar(animal);
+            } // for
+        else Salida.evento("no hay animales");
+        if (plantas.size() > 0)
+            for (Planta planta : plantas) {  // CAMBIAR
+                Tablero.agregar(planta);
+            } // for
+        else Salida.evento("no hay plantas");
+    }  // method
+*/

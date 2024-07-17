@@ -6,7 +6,7 @@ import java.util.HashSet;
 public class Celda {
     private int x;
     private int y;  // INTENTAR QUITAR ESTOS CAMPOS
-    private ArrayList<Ser> seresVivos; // = new ArrayList<>(0); devolver, ver iniciarSeresVivos
+    private ArrayList<Ser> seresVivos  = new ArrayList<>(0);
     //  private HashSet<int[][]> vecinosMoore = new HashSet();
 
     public Celda(int x, int y) {
@@ -27,9 +27,7 @@ public class Celda {
     public void setSerVivo(Ser ser) {
         seresVivos.add(ser);
     }
-    public void iniciarSeresVivos() {
-        seresVivos = new ArrayList<>(0);
-    }
+ //   public void iniciarSeresVivos() { seresVivos = new ArrayList<>(0); } ya iniciado
     public int getCantidadDeSeresAqui() {
         return seresVivos.size();
     }

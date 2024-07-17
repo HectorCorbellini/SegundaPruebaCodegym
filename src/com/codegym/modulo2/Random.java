@@ -10,7 +10,15 @@ public class Random {
         // cruz = !cara;
         return (cara) ? true : false;
         } // method
-    
+
+    static int cambiarCoordenadaVonNeumann(int coord, int tope) {
+        boolean coordDebeAumentar = Random.arrojarMonedaAlAire();
+        if (coordDebeAumentar) coord++; else coord--;
+        if (coord > tope-1) coord = coord-2;  // rebote contra bordes
+        else if (coord < 0) coord = coord+2;
+        return coord;
+    } // method
+
     static int cambiarCoordenadaMoore(int coord, int tope) {
         int max = 1; int min = -1;
         int rango = max - min + 1;

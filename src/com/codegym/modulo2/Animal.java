@@ -27,9 +27,9 @@ class Animal extends Ser {
         else {  // vecindad VonNeumann. Cambia una sola coordenada.
             boolean cambiarSoloX = Random.arrojarMonedaAlAire();
             if (cambiarSoloX)
-                nuevoX = cambiarCoordenadaVonNeumann(viejoX, Ajustes.largoTablero);
+                nuevoX = Random.cambiarCoordenadaVonNeumann(viejoX, Ajustes.largoTablero);
             else  // cambiarSoloY
-                nuevoY = cambiarCoordenadaVonNeumann(viejoY, Ajustes.altoTablero);
+                nuevoY = Random.cambiarCoordenadaVonNeumann(viejoY, Ajustes.altoTablero);
         } // else
         animalMoviente.setX(nuevoX);
         animalMoviente.setY(nuevoY);
@@ -37,12 +37,14 @@ class Animal extends Ser {
         return animalMoviente;
     } // method
 
-    static int cambiarCoordenadaVonNeumann(int coord, int tope) {
-        boolean coordDebeAumentar = Random.arrojarMonedaAlAire();
-        if (coordDebeAumentar) coord++; else coord--;
-        if (coord > tope-1) coord = coord-2;  // rebote contra bordes
-        else if (coord < 0) coord = coord+2;
-        return coord;
+    static void moverlosTodosUnaCelda() {
+        for (int lugarEnLista = 0; lugarEnLista < Lista.animales.size(); lugarEnLista++) {
+            Animal animal = moverUnAnimal(lugarEnLista);
+            if (animal.getEnergia() > 0) {
+                Lista.consecuenciasDeUnMovimiento(animal);
+                animal.setEnergia(animal.getEnergia() - 1);
+            }  // if
+        } // end for
     } // method
 
 } // class

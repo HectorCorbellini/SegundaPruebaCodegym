@@ -210,4 +210,7 @@ return coord;
             /* boolean elNuevoXdebeAumentar = Random.arrojarMonedaAlAire();
                       if (elNuevoXdebeAumentar) nuevoX++; else nuevoX--;
                       if (nuevoX > Ajustes.largoTablero-1 || nuevoX < 0)
-                            nuevoX = viejoX;  // rebote contra bordes*/
+                            nuevoX = viejoX;  // rebote contra bordes */
+
+      //     celda.iniciarSeresVivos(); // VER SI DE VERDAD SIRVE
+      seresVivos  = new ArrayList<>(0);
