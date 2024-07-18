@@ -266,3 +266,41 @@ return coord;
             } // for
         else Salida.evento("no hay plantas");
     }  // method
+
+    /*   void rectanguloDeSeres() {  // AÑADIR ESTE RECTANGULO AL TABLERO DESPUES
+
+            if ((priCeldaX >= 0) && (ultCeldaX < Ajustes.largoTablero)
+                    && (priCeldaY >= 0) && (ultCeldaY < Ajustes.altoTablero))
+            // MEJOR CREAR LA PRIMER Y ULTIMA CELDA DEL TABLERO Y REESCRIBIR IGUALDAD EN REFLEXION
+            {
+                if (seres.size() > cantCeldasRectangulo) System.out.println ("fuera de rango!");
+                else  { // distribucion aleatoria en rectangulo
+                    Set<Celda> libres = celdasRectangulo();
+                    for (Ser ser : seres) {
+                        Iterator<Celda> it = libres.iterator();
+                        Celda celda = null;
+                        if (it.hasNext()) {
+                            celda = it.next();
+                            it.remove();  // para que no haya usadas en libres
+                        } // if
+                        assert celda != null;
+                        Tablero.tablero[celda.getX()][celda.getY()].agregarSerVivo(ser);
+                    } // for
+                } // else
+            }
+            else System.out.println ("fuera de límites!");
+        } // method
+
+        /*    private Set<Celda> rectanguloDeCeldasLibres() {
+            Set<Celda> celdasLibres = new HashSet<>(0);
+            if (Ajustes.cantidadInicialAnimales > cantCeldasRectangulo)
+                System.out.println ("fuera de rango!");  // MANEJAR NULL POINTER EXCEPTION
+            else  {  // creacion del rectangulo con parametros
+                for (int i = priCeldaX; i == ultCeldaX; i++) {
+                    for (int j = priCeldaY; j == ultCeldaY; j++) {
+                        celdasLibres.add(new Celda(i,j));
+                    } // for
+                } // for
+            } // if validacion
+            return celdasLibres;
+        } // method  */

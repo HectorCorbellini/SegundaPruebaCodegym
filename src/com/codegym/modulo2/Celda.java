@@ -2,12 +2,13 @@ package com.codegym.modulo2;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 public class Celda {
     private final int x;
     private final int y;  // INTENTAR QUITAR ESTOS 2 CAMPOS
     private char simbolo = Tablero.CHAR_NULO;
-    private final ArrayList<Ser> seresVivos  = new ArrayList<>(0);
+    private final List<Ser> seresVivosEnCelda  = new ArrayList<>(0);
 
     public Celda(int x, int y) {
         this.x = x;
@@ -27,11 +28,11 @@ public class Celda {
         this.simbolo = simbolo;
     }
     public void agregarSerVivo(Ser ser) {
-        seresVivos.add(ser);
+        seresVivosEnCelda.add(ser);
     }
     public char traerDibujoDelSerVivo() {
-        if (seresVivos.size() == 1)  {
-              Ser unicoSer = seresVivos.get(0);
+        if (seresVivosEnCelda.size() == 1)  {
+              Ser unicoSer = seresVivosEnCelda.get(0);
               return unicoSer.getDibujo();
         }  // if
         else  {  System.out.println("Fallo. No hay un único ser aqui.");
@@ -39,7 +40,7 @@ public class Celda {
     } // get
 
     int cantidadDeSeresAqui() {
-        return seresVivos.size();
+        return seresVivosEnCelda.size();
     }
 
     void agregarSimbolo() {
@@ -57,11 +58,9 @@ public class Celda {
         // eleccion aleatoria de celda libre
         HashSet<Celda> celdasPosibles = vecinosVonNeumann(x,y);
         boolean celdaParaHijoEstaLibre = true;
-        ArrayList<Ser> seres = new ArrayList<>(0);
-        seres.addAll(Lista.animales);
-        seres.addAll(Lista.plantas);
+        HashSet<Ser> seres = Lista.todosLosSeres();
         for (Celda celdaP : celdasPosibles) {
-             for (Ser ser : seres) {
+             for (Ser ser : seres) {               // MEJOR USAR WHILE
                  if (celdaP.getX() == ser.getX() && celdaP.getY() == ser.getY()) {
                      celdaParaHijoEstaLibre = false;
                      break;
@@ -74,7 +73,7 @@ public class Celda {
     } // method
 
     private static HashSet<Celda> vecinosVonNeumann(int x, int y) {
-        // REUSAR ESTE METODO PARA MOVER UN ANIMAL
+                                           // REUSAR ESTE METODO PARA MOVER UN ANIMAL
         HashSet<Celda> vecinosVonNeu = new HashSet<>();
         if (y > 0) vecinosVonNeu.add(new Celda(x,y-1));
         if (y < Ajustes.altoTablero-1) vecinosVonNeu.add(new Celda(x,y+1));

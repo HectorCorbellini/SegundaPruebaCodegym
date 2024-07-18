@@ -2,7 +2,7 @@ package com.codegym.modulo2;
 
 public class Tablero {
     public static final char CHAR_NULO = '.';
-    static final Celda[][] tablero = new Celda[Ajustes.largoTablero][Ajustes.altoTablero];
+    private static final Celda[][] tablero = new Celda[Ajustes.largoTablero][Ajustes.altoTablero];
 
     static void cargarloVacio() {
         for (int x = 0; x < Ajustes.largoTablero; x++)
@@ -12,7 +12,7 @@ public class Tablero {
             } // for
     } // cargarlo
 
-    static void agregar (Ser ser) {
+    static private void agregar (Ser ser) {
         int x = ser.getX();
         int y = ser.getY();
         tablero[x][y].agregarSerVivo(ser);

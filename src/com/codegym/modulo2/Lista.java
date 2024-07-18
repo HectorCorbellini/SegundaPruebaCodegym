@@ -1,13 +1,17 @@
 package com.codegym.modulo2;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 
 public class Lista {
-    static ArrayList<Animal> animales = new ArrayList<>(Ajustes.cantidadInicialAnimales);
-    static ArrayList<Planta> plantas = new ArrayList<>(Ajustes.cantidadInicialPlantas);
+    static int cantAnimales = Ajustes.cantidadInicialAnimales;
+    static int cantPlantas = Ajustes.cantidadInicialPlantas;
+    static ArrayList<Animal> animales = new ArrayList<>(cantAnimales);
+    static ArrayList<Planta> plantas = new ArrayList<>(cantPlantas);
     static int numeroCharAnimal;
-    static int numeroCharPlanta;
+ //   static int numeroCharPlanta;
+
 
     // VER SI verdad se precisan estos geter y seter
     public static Animal getAnimal(int posicion)  {
@@ -19,20 +23,25 @@ public class Lista {
 
     static void crearListasDeSeres()  {
         // creacion de plantas y animales, se hace solamente una vez
-        numeroCharAnimal = 65;  // codigo ascii de letra 'A'
-        for (int i = 0; i < Ajustes.cantidadInicialAnimales; i++) {
-            int x = 0+i;
-            int y = 0+i;  // LUEGO TABLEAR Y HOMOGENEIZAR
-            char dibujo = (char)(numeroCharAnimal++);
-            Animal animal = new Animal(x,y,dibujo);
-            animales.add(animal);
-        }  // for animales
-        numeroCharPlanta = 111; // codigo ascii de letra 'o'
+        ArrayList<Ser> seres;
+        // animales
+        seres = Entrada.asignarCeldasAleatorias(cantAnimales,'A');
+        for (Ser ser : seres)
+            animales.add(new Animal(ser.getX(),ser.getY(),ser.getDibujo()));
+        // plantas
+        seres = Entrada.asignarCeldasAleatorias(cantPlantas,'o');
+        for (Ser ser : seres)
+            plantas.add(new Planta(ser.getX(),ser.getY(),ser.getDibujo()));
+    }  // method
+    
+    //    animales.add(animal);
+     //   Entrada.celdasAleatoriasParaSeres(plantas,Ajustes.cantidadInicialPlantas);
+/*        numeroCharPlanta = 111; // codigo ascii de letra 'o'  65 la A
         for (int i = 0; i < Ajustes.cantidadInicialPlantas; i++) {
             Planta planta = new Planta(7+i,2+i, (char)(numeroCharPlanta++));
             plantas.add(planta);
-        }  // for plantas
-    }  // crearSeres
+        }  // for plantas*/
+    
 
     static void aumentarUnidadEdadDeAnimales()  {
         for (Animal animal : animales) {
@@ -118,6 +127,14 @@ public class Lista {
             }  // for
         }  // if
     } // method
+
+    static HashSet<Ser> todosLosSeres() {
+        HashSet<Ser> seres = new HashSet<>(0);
+        seres.addAll(Lista.animales);
+        seres.addAll(Lista.plantas);
+    return seres;
+    } // method
+
 } // class
 
 /*  NOTAS:
