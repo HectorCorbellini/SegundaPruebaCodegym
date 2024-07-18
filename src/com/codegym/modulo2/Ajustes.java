@@ -10,7 +10,7 @@ public class Ajustes {
     static int energiaInicialDeSeres = 10;
  //   puede separarse en energiaInicial de Plantas y Animales
     static final int edadReproductivaAnimal = 1;
-    static final int edadDeMuerteAnimal = 5;  // CAMBIAR VALOR
+    static final int edadDeMuerteAnimal = 8;  // CAMBIAR VALOR
     static final int energiaTopePlanta = energiaInicialDeSeres + 4;
     static final int energiaTopeAnimal = energiaInicialDeSeres + 1;
     static final int energiaIntercambiadaEntrePlantaYAnimal = 3;

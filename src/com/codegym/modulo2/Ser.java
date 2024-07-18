@@ -3,7 +3,7 @@ package com.codegym.modulo2;
 public class Ser {
     private int x;
     private int y;
-    private char dibujo;
+    private final char dibujo;
     private int energia = Ajustes.energiaInicialDeSeres;
     static final int energiaIntercambiada = Ajustes.energiaIntercambiadaEntrePlantaYAnimal;
 
@@ -47,11 +47,10 @@ public class Ser {
     public static void aparearseAnimales(Animal unPadre) {
         // unPadre es cualquiera de los dos porque estan en la misma celda
         Celda celdaParaHijo =
-          Celda.encontrarUnaLibreAlrededor(unPadre.getX(),unPadre.getY());
+              Celda.encontrarUnaLibreAlrededor(unPadre.getX(),unPadre.getY());
         boolean seEncontroCeldaParaHijo = (celdaParaHijo != null);
         if (seEncontroCeldaParaHijo) {
             crearElHijo(celdaParaHijo.getX(),celdaParaHijo.getY(),(char)(Lista.numeroCharAnimal++));
-            Salida.nacimientos++;
             } // if
         else Salida.evento("encuentro sin hijo");
     } // method
@@ -60,6 +59,7 @@ public class Ser {
         Animal nuevoAnimal = new Animal(nuevoX,nuevoY,nuevoDibujo);
         Lista.animales.add(nuevoAnimal);
         Salida.evento("hijo "+nuevoDibujo+" creado en ["+nuevoX+","+nuevoY+"]");
+        Salida.nacimientos++;
     } // method
 
 } // class

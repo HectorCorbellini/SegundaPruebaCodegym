@@ -156,11 +156,11 @@ return coord;
                 // } // method
 
 
-           // las celdas Moore solo deberán usarse si tambien se usan las Von Neumann
-                        if (x > 0 && y > 0) vecinosMoore.add(new int[x-1][y-1]);
-                        if (x > 0  && y < Ajustes.largoTablero-1) vecinosMoore.add(new int[x-1][y+1]);
-                        if (x < Ajustes.largoTablero-1 && y > 0) vecinosMoore.add(new int[x+1][y-1]);
-                        if (x < Ajustes.largoTablero-1 && y < Ajustes.largoTablero-1) vecinosMoore.add(new int[x+1][y+1]);
+   // las celdas Moore solo deberán usarse si tambien se usan las Von Neumann
+         if (x > 0 && y > 0) vecinosMoore.add(new int[x-1][y-1]);
+         if (x > 0  && y < Ajustes.largoTablero-1) vecinosMoore.add(new int[x-1][y+1]);
+         if (x < Ajustes.largoTablero-1 && y > 0) vecinosMoore.add(new int[x+1][y-1]);
+         if (x < Ajustes.largoTablero-1 && y < Ajustes.largoTablero-1) vecinosMoore.add(new int[x+1][y+1]);
 
                 /*    public void cargarDibujo() {
                         switch (seresVivos.size()) {
@@ -214,3 +214,55 @@ return coord;
 
       //     celda.iniciarSeresVivos(); // VER SI DE VERDAD SIRVE
       seresVivos  = new ArrayList<>(0);
+
+      /*    public char getDibujoDePrimerSerVivo() {
+              if (seresVivos.size() > 0)  {
+                  Ser primerSer = seresVivos.get(0);
+                  // el primero es el que más estuvo en esta celda
+                  return primerSer.getDibujo();
+              }  // if
+              else return Tablero.CHAR_NULO;
+          } // get*/
+      //    public char getDibujo() {
+      //        return dibujo; }
+
+          //  private HashSet<int[][]> vecinosMoore = new HashSet();
+
+       static int cambiarCoordenadaMoore(int coord) {  // int tope ?
+           boolean disminuirCoordenada = Math.random() < 0.5;
+           // boolean aumentarCoordenada = !disminuirCoordenada;
+           return (disminuirCoordenada) ? coord-1 : coord+1;
+       clase Animales:
+          nuevoX = Random.cambiarCoordenadaMoore(viejoX);
+          if (nuevoX > Ajustes.largoTablero-1 || nuevoX < 0) nuevoX = viejoX;
+          nuevoY = Random.cambiarCoordenadaMoore(viejoY);
+          if (nuevoY > Ajustes.altoTablero-1 || nuevoY < 0) nuevoY = viejoY;
+
+        //   int viejoX = animalMoviente.getX();
+        //   int viejoY = animalMoviente.getY();
+           else {  // vecindad VonNeumann. Cambia una sola coordenada.
+               boolean cambiarSoloX = Random.arrojarMonedaAlAire();
+               if (cambiarSoloX)  {
+                   int nuevoX = Random.cambiarCoordenada(viejoX, Ajustes.largoTablero);
+                   int nuevoY = viejoY;
+               } //
+               else  {  // cambiarSoloY
+                   int nuevoX = viejoX;
+                   int nuevoY = Random.cambiarCoordenada(viejoY, Ajustes.altoTablero);
+               } //
+           } // else
+        //   animalMoviente.setX(nuevoX);
+        //   animalMoviente.setY(nuevoY);
+
+  static void agregarLosSeresAlTablero() {
+        if (animales.size() > 0)
+            for (Animal animal : animales) {
+                Tablero.agregar(animal);
+            } // for
+        else Salida.evento("no hay animales");
+        if (plantas.size() > 0)
+            for (Planta planta : plantas) {  // CAMBIAR
+                Tablero.agregar(planta);
+            } // for
+        else Salida.evento("no hay plantas");
+    }  // method

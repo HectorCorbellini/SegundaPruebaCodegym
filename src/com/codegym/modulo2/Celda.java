@@ -4,18 +4,77 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 public class Celda {
-    private int x;
-    private int y;  // INTENTAR QUITAR ESTOS CAMPOS
-    private ArrayList<Ser> seresVivos  = new ArrayList<>(0);
-    //  private HashSet<int[][]> vecinosMoore = new HashSet();
+    private final int x;
+    private final int y;  // INTENTAR QUITAR ESTOS 2 CAMPOS
+    private char simbolo = Tablero.CHAR_NULO;
+    private final ArrayList<Ser> seresVivos  = new ArrayList<>(0);
 
     public Celda(int x, int y) {
         this.x = x;
         this.y = y;
     } // constructor
-    //    this.dibujo = dibujo; no se necesita
+
+    public int getX() {
+        return x;
+    }
+    public int getY() {
+        return y;
+    }
+    public char getSimbolo() {
+        return simbolo;
+    }
+    public void setSimbolo(char simbolo) {
+        this.simbolo = simbolo;
+    }
+    public void agregarSerVivo(Ser ser) {
+        seresVivos.add(ser);
+    }
+    public char traerDibujoDelSerVivo() {
+        if (seresVivos.size() == 1)  {
+              Ser unicoSer = seresVivos.get(0);
+              return unicoSer.getDibujo();
+        }  // if
+        else  {  System.out.println("Fallo. No hay un único ser aqui.");
+              return 'X';  } // else
+    } // get
+
+    int cantidadDeSeresAqui() {
+        return seresVivos.size();
+    }
+
+    void agregarSimbolo() {
+        switch (cantidadDeSeresAqui()) {
+            case 0 -> setSimbolo(Tablero.CHAR_NULO);
+            case 1 -> setSimbolo(traerDibujoDelSerVivo());
+            case 2 -> setSimbolo('2');
+            case 3 -> setSimbolo('3');
+            case 4 -> setSimbolo('4');
+            default -> setSimbolo('?'); // mas de 4 seres
+        } // switch
+    } // method
     
+    static Celda encontrarUnaLibreAlrededor(int x, int y) {
+        // eleccion aleatoria de celda libre
+        HashSet<Celda> celdasPosibles = vecinosVonNeumann(x,y);
+        boolean celdaParaHijoEstaLibre = true;
+        ArrayList<Ser> seres = new ArrayList<>(0);
+        seres.addAll(Lista.animales);
+        seres.addAll(Lista.plantas);
+        for (Celda celdaP : celdasPosibles) {
+             for (Ser ser : seres) {
+                 if (celdaP.getX() == ser.getX() && celdaP.getY() == ser.getY()) {
+                     celdaParaHijoEstaLibre = false;
+                     break;
+                 } // if
+            } // for seres
+            if (celdaParaHijoEstaLibre)
+                return celdaP;
+        } // for celdasPosibles
+        return null;
+    } // method
+
     private static HashSet<Celda> vecinosVonNeumann(int x, int y) {
+        // REUSAR ESTE METODO PARA MOVER UN ANIMAL
         HashSet<Celda> vecinosVonNeu = new HashSet<>();
         if (y > 0) vecinosVonNeu.add(new Celda(x,y-1));
         if (y < Ajustes.altoTablero-1) vecinosVonNeu.add(new Celda(x,y+1));
@@ -24,51 +83,4 @@ public class Celda {
         return vecinosVonNeu;
     } // method
 
-    public void setSerVivo(Ser ser) {
-        seresVivos.add(ser);
-    }
- //   public void iniciarSeresVivos() { seresVivos = new ArrayList<>(0); } ya iniciado
-    public int getCantidadDeSeresAqui() {
-        return seresVivos.size();
-    }
-    public char getDibujoDePrimerSerVivo() {
-        if (seresVivos.size() > 0)  {
-            Ser primerSer = seresVivos.get(0);
-            char esteDibujo = primerSer.getDibujo();
-            // el primero es el que más estuvo en esta celda
-            return esteDibujo;
-        }  // if
-        else return Tablero.CHAR_NULO;
-    }
-//    public char getDibujo() {
-//        return dibujo; }
-
-    public int getX() {
-        return x;
-    }
-    public int getY() {
-        return y;
-    }
-    
-    static Celda encontrarUnaLibreAlrededor(int x, int y) {
-        HashSet<Celda> celdasPosibles = vecinosVonNeumann(x,y);
-        boolean celdaParaHijoEstaLibre = true;
-        for (Celda celdaP : celdasPosibles) {
-            int i = celdaP.getX(); int j = celdaP.getY();
-         // metodo viejo no controlaba animales:
-          //  Celda celdaPosible = Tablero.tablero[i][j];
-         //   char celdaPosibleDibujo = celdaPosible.getDibujoDePrimerSerVivo();
-         //   boolean celdaParaHijoEstaLibre = (int)celdaPosibleDibujo == (int)Tablero.CHAR_NULO;
-            for (Animal animal : Lista.animales) {
-                if (i == animal.getX() && j == animal.getY()) {
-                    celdaParaHijoEstaLibre = false;
-                } // if
-            } // for animal    
-        //  hacer lo mismo para plantas            
-            if (celdaParaHijoEstaLibre) {
-                return celdaP;
-            } // if
-        } // for
-        return null;
-    } // method
 } // class

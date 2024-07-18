@@ -17,7 +17,7 @@ public class Salida {
     static BufferedWriter iniciarCSV()  {
   //      String rutaSalida = "/storage/emulated/0/Documents/CSV.txt";
         String rutaSalida = "/home/uko/Documentos/CSV.txt";
-        BufferedWriter buffParaGuardar = null;
+        BufferedWriter buffParaGuardar;
         try {
             FileWriter writer = new FileWriter(rutaSalida, true);
             buffParaGuardar = new BufferedWriter(writer);
@@ -47,7 +47,7 @@ public class Salida {
         } catch (IOException e) { throw new RuntimeException(e); }
     }  // method
 
-    static void procesosDeCierre(int momentos, BufferedWriter bufferCSV)  {
+    static void accionesDeCierre(int momentos, BufferedWriter bufferCSV)  {
         try {
             bufferCSV.close();
         } catch (IOException e) {

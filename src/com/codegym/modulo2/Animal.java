@@ -12,39 +12,40 @@ class Animal extends Ser {
         this.edad = edad;
     }
 
-    public static Animal moverUnAnimal(int posicionLista) {
+    static void moverlosTodosUnaCelda() {
+        for (int i = 0; i < Lista.animales.size(); i++) {
+            Animal animal = moverUnAnimal(i);
+            animal.setEnergia(animal.getEnergia() - 1);
+            if (animal.getEnergia() > 0) // si llega muerto no tiene poder de cambio
+                Lista.consecuenciasDeUnMovimiento(animal);
+        } // end for
+    } // method
+
+    static Animal moverUnAnimal(int posicionLista) {
         Animal animalMoviente = Lista.getAnimal(posicionLista);
-        int viejoX = animalMoviente.getX();
-        int viejoY = animalMoviente.getY();
-        int nuevoX = viejoX;
-        int nuevoY = viejoY;
-        if (Ajustes.moverConVecindadMoore)  {
-            while (nuevoX == viejoX && nuevoY == viejoY) {
-                nuevoX = Random.cambiarCoordenadaMoore(viejoX,Ajustes.largoTablero);
-                nuevoY = Random.cambiarCoordenadaMoore(viejoY,Ajustes.altoTablero);
-            } // while
-        } // if
-        else {  // vecindad VonNeumann. Cambia una sola coordenada.
-            boolean cambiarSoloX = Random.arrojarMonedaAlAire();
-            if (cambiarSoloX)
-                nuevoX = Random.cambiarCoordenadaVonNeumann(viejoX, Ajustes.largoTablero);
-            else  // cambiarSoloY
-                nuevoY = Random.cambiarCoordenadaVonNeumann(viejoY, Ajustes.altoTablero);
-        } // else
-        animalMoviente.setX(nuevoX);
-        animalMoviente.setY(nuevoY);
+        if (Ajustes.moverConVecindadMoore) {
+            moverConMoore(animalMoviente);
+        } else
+            moverConVonNeumann(animalMoviente);
         Lista.setAnimal(posicionLista, animalMoviente);
         return animalMoviente;
     } // method
 
-    static void moverlosTodosUnaCelda() {
-        for (int lugarEnLista = 0; lugarEnLista < Lista.animales.size(); lugarEnLista++) {
-            Animal animal = moverUnAnimal(lugarEnLista);
-            if (animal.getEnergia() > 0) {
-                Lista.consecuenciasDeUnMovimiento(animal);
-                animal.setEnergia(animal.getEnergia() - 1);
-            }  // if
-        } // end for
+    static void moverConMoore (Animal animal)  {
+        int nuevoX = Random.cambiarCoordenada(animal.getX(), Ajustes.largoTablero);
+        int nuevoY = Random.cambiarCoordenada(animal.getY(), Ajustes.altoTablero);
+        animal.setX(nuevoX);
+        animal.setY(nuevoY);
+    } // method
+
+    static void moverConVonNeumann (Animal animal)  {
+        boolean cambiarSoloX = Random.arrojarMonedaAlAire();
+        if (cambiarSoloX)  {
+            animal.setX(Random.cambiarCoordenada(animal.getX(), Ajustes.largoTablero));
+        } // if
+        else  {  // cambiarSoloY
+            animal.setY(Random.cambiarCoordenada(animal.getY(), Ajustes.altoTablero));
+        } // else
     } // method
 
 } // class

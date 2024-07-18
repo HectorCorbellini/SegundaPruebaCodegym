@@ -8,24 +8,18 @@ java -jar JuegoVidaMio.jar
 */
 public class Main {
 	public static void main(String[] args)  {
-  // Tablero.cargarloVacio();
 		Lista.crearListasDeSeres();
-  // 	Lista.agregarLosSeresAlTablero();
 		BufferedWriter bufferCSV = Salida.iniciarCSV();
 		int momentos = 1;
 		boolean vidaEquilibrada = true;
 		while (momentos < Ajustes.maxTiempo && vidaEquilibrada) {
-		      Tablero.cargarloVacio();
-		    Lista.agregarLosAnimalesAlTablero();
-			Lista.agregarLasPlantasAlTablero();
-		    Pantalla.limpieza();
-			  Tablero.mostrarlo();
+		    Tablero.colocarLosSeres();
 			Salida.hacerEstadistica(momentos, bufferCSV);
 			Ajustes.transcurreEsteMomento();
 			vidaEquilibrada = Vida.recrearla();
 			momentos++;
 		} // while
-		Salida.procesosDeCierre(momentos, bufferCSV);
+		Salida.accionesDeCierre(momentos, bufferCSV);
 	} // main
 
 } // class

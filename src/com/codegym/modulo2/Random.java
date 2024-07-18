@@ -1,24 +1,29 @@
 package com.codegym.modulo2;
 
-import java.util.*;
-
 public class Random {
-    // AÑADIR randomizacion en la creacion de seres
+    // VER DE CAMBIAR ESTO POR UN ENUM DE CARDINALES CON HASHMAP
     
     static boolean arrojarMonedaAlAire() {
-        boolean cara = Math.random() < 0.5; 
-        // cruz = !cara;
-        return (cara) ? true : false;
-        } // method
+     return Math.random() < 0.5;
+     //   boolean cara = Math.random() < 0.5;  cruz = !cara;
+     //   return (cara) ? true : false;
+     } // method
 
-    static int cambiarCoordenadaVonNeumann(int coord, int tope) {
+    static int cambiarCoordenada(int coord, int tope) {
         boolean coordDebeAumentar = Random.arrojarMonedaAlAire();
-        if (coordDebeAumentar) coord++; else coord--;
-        if (coord > tope-1) coord = coord-2;  // rebote contra bordes
-        else if (coord < 0) coord = coord+2;
+        if (coordDebeAumentar)  {
+            coord++;
+            if (coord > tope-1) coord = coord-2;  // rebote contra borde
+        } else  {  // coord debe disminuir
+            coord--;
+            if (coord < 0) coord = coord+2;  // rebote contra borde
+        } // if-else
         return coord;
     } // method
 
+} // class
+
+/* Moore tambien podia hacerse asi:
     static int cambiarCoordenadaMoore(int coord, int tope) {
         int max = 1; int min = -1;
         int rango = max - min + 1;
@@ -28,20 +33,7 @@ public class Random {
         coord = (coord < 0) ? coord+1 : coord;
         return coord;
     } // method
-} // class
 
-/* Moore tambien podia hacerse parecido a VonNeumann:
-    static int cambiarCoordenadaMoore(int coord) {  // int tope ?
-        boolean disminuirCoordenada = Math.random() < 0.5;
-        // boolean aumentarCoordenada = !disminuirCoordenada;
-        return (disminuirCoordenada) ? coord-1 : coord+1;
-    clase Animales:
-       nuevoX = Random.cambiarCoordenadaMoore(viejoX);
-       if (nuevoX > Ajustes.largoTablero-1 || nuevoX < 0) nuevoX = viejoX;
-       nuevoY = Random.cambiarCoordenadaMoore(viejoY);
-       if (nuevoY > Ajustes.altoTablero-1 || nuevoY < 0) nuevoY = viejoY;
-  */
- /*
  ejemplo random:
    int max = 10;
    int min = 1;
