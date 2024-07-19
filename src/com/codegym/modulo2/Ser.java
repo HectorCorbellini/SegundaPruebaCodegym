@@ -50,7 +50,7 @@ public class Ser {
               Celda.encontrarUnaLibreAlrededor(unPadre.getX(),unPadre.getY());
         boolean seEncontroCeldaParaHijo = (celdaParaHijo != null);
         if (seEncontroCeldaParaHijo) {
-            crearElHijo(celdaParaHijo.getX(),celdaParaHijo.getY(),(char)(Lista.numeroCharAnimal++));
+            crearElHijo(celdaParaHijo.getX(),celdaParaHijo.getY(),Creacion.dibujoCambianteAnimal++);
             } // if
         else Salida.evento("encuentro sin hijo");
     } // method

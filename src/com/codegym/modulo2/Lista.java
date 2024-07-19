@@ -5,43 +5,16 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 public class Lista {
-    static int cantAnimales = Ajustes.cantidadInicialAnimales;
-    static int cantPlantas = Ajustes.cantidadInicialPlantas;
-    static ArrayList<Animal> animales = new ArrayList<>(cantAnimales);
-    static ArrayList<Planta> plantas = new ArrayList<>(cantPlantas);
-    static int numeroCharAnimal;
- //   static int numeroCharPlanta;
+    static ArrayList<Animal> animales = new ArrayList<>(Ajustes.cantidadInicialAnimales);
+    static ArrayList<Planta> plantas = new ArrayList<>(Ajustes.cantidadInicialPlantas);
 
-
-    // VER SI verdad se precisan estos geter y seter
+    // VER SI de verdad se precisan estos getter y setter
     public static Animal getAnimal(int posicion)  {
         return animales.get(posicion);
     }  // getter
     public static void setAnimal (int posicion, Animal animal) {
         animales.set(posicion, animal);
     } // setter
-
-    static void crearListasDeSeres()  {
-        // creacion de plantas y animales, se hace solamente una vez
-        ArrayList<Ser> seres;
-        // animales
-        seres = Entrada.asignarCeldasAleatorias(cantAnimales,'A');
-        for (Ser ser : seres)
-            animales.add(new Animal(ser.getX(),ser.getY(),ser.getDibujo()));
-        // plantas
-        seres = Entrada.asignarCeldasAleatorias(cantPlantas,'o');
-        for (Ser ser : seres)
-            plantas.add(new Planta(ser.getX(),ser.getY(),ser.getDibujo()));
-    }  // method
-    
-    //    animales.add(animal);
-     //   Entrada.celdasAleatoriasParaSeres(plantas,Ajustes.cantidadInicialPlantas);
-/*        numeroCharPlanta = 111; // codigo ascii de letra 'o'  65 la A
-        for (int i = 0; i < Ajustes.cantidadInicialPlantas; i++) {
-            Planta planta = new Planta(7+i,2+i, (char)(numeroCharPlanta++));
-            plantas.add(planta);
-        }  // for plantas*/
-    
 
     static void aumentarUnidadEdadDeAnimales()  {
         for (Animal animal : animales) {

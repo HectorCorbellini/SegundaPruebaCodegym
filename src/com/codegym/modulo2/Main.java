@@ -8,7 +8,7 @@ java -jar JuegoVidaMio.jar
 */
 public class Main {
 	public static void main(String[] args)  {
-		Lista.crearListasDeSeres();
+		Creacion.iniciarListasDeSeres();
 		BufferedWriter bufferCSV = Salida.iniciarCSV();
 		int momentos = 1;
 		boolean vidaEquilibrada = true;

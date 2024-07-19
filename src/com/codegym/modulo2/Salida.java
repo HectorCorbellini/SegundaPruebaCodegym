@@ -3,8 +3,9 @@ package com.codegym.modulo2;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Serializable;
 
-public class Salida {
+public class Salida implements Serializable {  // REVISAAAR!!!!
     static int muertes = 0;
     static int nacimientos = 0;
     static StringBuilder eventos = new StringBuilder();
