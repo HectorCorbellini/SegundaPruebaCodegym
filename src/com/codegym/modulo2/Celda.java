@@ -11,8 +11,18 @@ public class Celda {
     private final List<Ser> seresVivosEnCelda  = new ArrayList<>(0);
 
     public Celda(int x, int y) {
-        this.x = x;
-        this.y = y;
+        if (x >= 0 && x < Ajustes.largoTablero)
+            this.x = x;
+        else  {
+            System.out.println(" columna no válida ");
+            this.x = 0;
+        }
+        if (y >= 0 && y < Ajustes.altoTablero)
+            this.y = y;
+        else {
+            System.out.println(" fila no válida ");
+            this.y = 0;
+        }
     } // constructor
 
     public int getX() {
