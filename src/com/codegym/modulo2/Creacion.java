@@ -56,8 +56,8 @@ public class Creacion {
             Lista.animales.add(animal);
         }  // for animales
         for (int i = 0; i < Ajustes.cantidadInicialPlantas; i++) {
-            int x = 1+i;
-            int y = 1+i;
+            int x = 5+i;
+            int y = 2+i;
             Planta planta = new Planta(x,y, dibujoCambiantePlanta++);
             Lista.plantas.add(planta);
         }  // for plantas
