@@ -6,7 +6,9 @@ public class Ajustes {
     static final int altoTablero = 10;
     static final boolean iniciarSeresEnAreasRectangulares = false;
     // iniciarSeresPorLineas = ! iniciarSeresEnAreasRectangulares;
-    // si se elige iniciarEnAreasRectantulare, entonces hay que
+    // si se elige iniciarSeresPor Lineas, ir a Creacion.iniciarSeresPorLineas
+    // y alli cambiar los valores de los x y los y
+    // si se elige iniciarEnAreasRectanglares, entonces hay que
     // dar los valores de celdas de a continuación:
     static final Celda primeraCeldaSeres = new Celda(2,1);
     static final Celda ultimaCeldaSeres = new Celda(5,3);

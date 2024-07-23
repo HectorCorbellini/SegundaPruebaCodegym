@@ -13,7 +13,7 @@ public class Vida {
         boolean hayDemasiadaVida = false;
         if (Lista.animales.size() > topeDeAnimales) {
             hayDemasiadaVida = true;
-            Salida.evento("vida supera el tablero");
+            Salida.evento("demasiados animales");
         }  // if
         return hayVidaSuficiente && !hayDemasiadaVida;
     }  // method

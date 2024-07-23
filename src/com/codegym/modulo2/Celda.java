@@ -24,7 +24,7 @@ public class Celda {
         }
     } // constructor
 
-    // Overriding equals() to compare two Ser objects
+    // Overriding equals() to compare two Celda objects
     @Override
     public boolean equals(Object o) {
         // If the object is compared with itself then return true
@@ -33,11 +33,11 @@ public class Celda {
         }
         /* Check if o is an instance of Ser or not
           "null instanceof [type]" also returns false */
-        if (!(o instanceof Ser)) {
+        if (!(o instanceof Celda)) {
             return false;
         }
         // typecast o to Complex so that we can compare data members
-        Ser c = (Ser) o;
+        Celda c = (Celda) o;
 
         // Compare the data members and return accordingly
         return x == c.getX() && y == c.getY();
@@ -87,10 +87,10 @@ public class Celda {
         boolean celdaParaHijoEstaLibre = true;
         HashSet<Ser> seres = Lista.todosLosSeres();
         for (Celda celdaP : celdasPosibles) {
-            Ser futuroHijo = new Ser (celdaP.getX(),celdaP.getY());
-             for (Ser ser : seres) {
-                   if (ser.equals(futuroHijo)) {
-          //       if (celdaP.getX() == ser.getX() && celdaP.getY() == ser.getY()) {
+            for (Ser ser : seres) {
+                Celda celdaDeHijo = Ser.celdaEnQueEsta(ser);
+                if (celdaP.equals(celdaDeHijo)) {
+          //     if (celdaP.getX() == ser.getX() && celdaP.getY() == ser.getY()) {
           // si equals da problema, volver a habilitar ese comentario
                      celdaParaHijoEstaLibre = false;
                      break;
