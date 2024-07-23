@@ -4,10 +4,12 @@ public class Ajustes {
     static final int maxTiempo = 30;
     static final int largoTablero = 30;
     static final int altoTablero = 10;
-    static final boolean iniciarSeresEnAreasRectangulares = true;
+    static final boolean iniciarSeresEnAreasRectangulares = false;
     // iniciarSeresPorLineas = ! iniciarSeresEnAreasRectangulares;
-    static final Celda primeraCeldaSeres = celdaValidadaDeSeres(2,1);
-    static final Celda ultimaCeldaSeres = celdaValidadaDeSeres(5,3);
+    // si se elige iniciarEnAreasRectantulare, entonces hay que
+    // dar los valores de celdas de a continuación:
+    static final Celda primeraCeldaSeres = new Celda(2,1);
+    static final Celda ultimaCeldaSeres = new Celda(5,3);
     // en el rectangulo formado por esas dos celdas se colocan automáticamente los seres vivos
     static int cantidadInicialAnimales = 3;
     static int cantidadInicialPlantas = 5;
@@ -21,17 +23,11 @@ public class Ajustes {
     static final int energiaIntercambiadaEntrePlantaYAnimal = 3;
     static final boolean moverConVecindadMoore = false;
 
-    static Celda celdaValidadaDeSeres (int x, int y) {
-        if (x < largoTablero && y < altoTablero)
-            return new Celda(x,y);
-        else return null;
-    } // if
 
-
-    static String traerEstadistica(int ciclo, int animales, int plantas) {
+    static String traerEstadistica(int animales, int plantas) {
         // llevarlo a mostrar archivo CSV
         System.out.println("Tiempo;Animales;Plantas;Nacimientos;Muertes;Eventos");
-        String datos = ciclo + ";" + animales + ";" + plantas +
+        String datos = Main.momento + ";" + animales + ";" + plantas +
                 ";" + Salida.nacimientos + ";" + Salida.muertes + ";" + Salida.eventos;
         System.out.println(datos);
         return datos;

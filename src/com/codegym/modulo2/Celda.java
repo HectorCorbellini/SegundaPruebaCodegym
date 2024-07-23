@@ -5,8 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 
 public class Celda {
-    private final int x;
-    private final int y;  // INTENTAR QUITAR ESTOS 2 CAMPOS
+    private final int x, y;
     private char simbolo = Tablero.CHAR_NULO;
     private final List<Ser> seresVivosEnCelda  = new ArrayList<>(0);
 
@@ -25,6 +24,25 @@ public class Celda {
         }
     } // constructor
 
+    // Overriding equals() to compare two Ser objects
+    @Override
+    public boolean equals(Object o) {
+        // If the object is compared with itself then return true
+        if (o == this) {
+            return true;
+        }
+        /* Check if o is an instance of Ser or not
+          "null instanceof [type]" also returns false */
+        if (!(o instanceof Ser)) {
+            return false;
+        }
+        // typecast o to Complex so that we can compare data members
+        Ser c = (Ser) o;
+
+        // Compare the data members and return accordingly
+        return x == c.getX() && y == c.getY();
+    } // equals
+
     public int getX() {
         return x;
     }
@@ -40,19 +58,6 @@ public class Celda {
     public void agregarSerVivo(Ser ser) {
         seresVivosEnCelda.add(ser);
     }
-    public char traerDibujoDelSerVivo() {
-        if (seresVivosEnCelda.size() == 1)  {
-              Ser unicoSer = seresVivosEnCelda.get(0);
-              return unicoSer.getDibujo();
-        }  // if
-        else  {  System.out.println("Fallo. No hay un único ser aqui.");
-              return 'X';  } // else
-    } // get
-
-    int cantidadDeSeresAqui() {
-        return seresVivosEnCelda.size();
-    }
-
     void agregarSimbolo() {
         switch (cantidadDeSeresAqui()) {
             case 0 -> setSimbolo(Tablero.CHAR_NULO);
@@ -63,6 +68,18 @@ public class Celda {
             default -> setSimbolo('?'); // mas de 4 seres
         } // switch
     } // method
+    int cantidadDeSeresAqui() {
+        return seresVivosEnCelda.size();
+    }
+
+    public char traerDibujoDelSerVivo() {
+        if (seresVivosEnCelda.size() == 1)  {
+              Ser unicoSer = seresVivosEnCelda.get(0);
+              return unicoSer.getDibujo();
+        }  // if
+        else  {  System.out.println("Fallo. No hay un único ser aqui.");
+              return 'X';  } // else
+    } // get
     
     static Celda encontrarUnaLibreAlrededor(int x, int y) {
         // eleccion aleatoria de celda libre
@@ -70,20 +87,23 @@ public class Celda {
         boolean celdaParaHijoEstaLibre = true;
         HashSet<Ser> seres = Lista.todosLosSeres();
         for (Celda celdaP : celdasPosibles) {
-             for (Ser ser : seres) {               // MEJOR USAR WHILE
-                 if (celdaP.getX() == ser.getX() && celdaP.getY() == ser.getY()) {
+            Ser futuroHijo = new Ser (celdaP.getX(),celdaP.getY());
+             for (Ser ser : seres) {
+                   if (ser.equals(futuroHijo)) {
+          //       if (celdaP.getX() == ser.getX() && celdaP.getY() == ser.getY()) {
+          // si equals da problema, volver a habilitar ese comentario
                      celdaParaHijoEstaLibre = false;
                      break;
                  } // if
             } // for seres
             if (celdaParaHijoEstaLibre)
-                return celdaP;
+                 return celdaP;
         } // for celdasPosibles
         return null;
     } // method
 
     private static HashSet<Celda> vecinosVonNeumann(int x, int y) {
-                                           // REUSAR ESTE METODO PARA MOVER UN ANIMAL
+                                // REUSAR ESTE METODO PARA MOVER UN ANIMAL
         HashSet<Celda> vecinosVonNeu = new HashSet<>();
         if (y > 0) vecinosVonNeu.add(new Celda(x,y-1));
         if (y < Ajustes.altoTablero-1) vecinosVonNeu.add(new Celda(x,y+1));

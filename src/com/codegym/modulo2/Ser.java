@@ -1,9 +1,8 @@
 package com.codegym.modulo2;
 
 public class Ser {
-    private int x;
-    private int y;
-    private final char dibujo;
+    private int x, y;
+    private char dibujo = ' ';
     private int energia = Ajustes.energiaInicialDeSeres;
     static final int energiaIntercambiada = Ajustes.energiaIntercambiadaEntrePlantaYAnimal;
 
@@ -11,6 +10,11 @@ public class Ser {
         this.x = x; // puede agregarse validacion
         this.y = y;
         this.dibujo = dibujo;
+    } // constructor
+
+    public Ser (int x, int y) {
+        this.x = x; // puede agregarse validacion
+        this.y = y;
     } // constructor
 
     public int getX() {
@@ -60,6 +64,41 @@ public class Ser {
         Lista.animales.add(nuevoAnimal);
         Salida.evento("hijo "+nuevoDibujo+" creado en ["+nuevoX+","+nuevoY+"]");
         Salida.nacimientos++;
+    } // method
+
+    public static void consecuenciasDeUnMovimiento(Animal animalQueLlegoAEstaCelda) {
+        // al haberse movido un animal hay que controlar las consecuencias
+        consecuenciasParaPlantas(animalQueLlegoAEstaCelda);
+        consecuenciasParaAnimales(animalQueLlegoAEstaCelda);
+    } // method
+
+    static void consecuenciasParaPlantas(Animal animalQueLlegoAqui) {
+        boolean alliTambienHayUnaPlanta;
+        for (Planta p : Lista.plantas) {
+            alliTambienHayUnaPlanta = (p.getX() == animalQueLlegoAqui.getX()
+                    && p.getY() == animalQueLlegoAqui.getY());
+            if (alliTambienHayUnaPlanta)  {
+                comerPlanta(p, animalQueLlegoAqui);
+                break; // solo puede haber una sola planta alli
+            }  // if
+        }  // for
+    } // method
+    static void consecuenciasParaAnimales(Animal animalQueLlegoAqui) {
+        boolean alliTambienHayOtroAnimal;
+        if (animalQueLlegoAqui.getEdad() >= Ajustes.edadReproductivaAnimal)  {
+            for (Animal a: Lista.animales) {
+                alliTambienHayOtroAnimal = (a.getX() == animalQueLlegoAqui.getX()
+                        && a.getY() == animalQueLlegoAqui.getY())
+                        && (a.getDibujo() != animalQueLlegoAqui.getDibujo());
+                boolean tambienEsMayorDeEdad = a.getEdad() >= Ajustes.edadReproductivaAnimal;
+                if (alliTambienHayOtroAnimal && tambienEsMayorDeEdad) {
+                    aparearseAnimales(animalQueLlegoAqui);
+                    a.setEnergia(a.getEnergia() - 1);
+                    animalQueLlegoAqui.setEnergia(animalQueLlegoAqui.getEnergia() - 1);
+                    break; // no me hago cargo de si hay mas animales en esa celda
+                }  // if
+            }  // for
+        }  // if
     } // method
 
 } // class

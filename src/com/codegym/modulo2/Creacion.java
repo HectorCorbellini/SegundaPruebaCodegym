@@ -26,6 +26,8 @@ public class Creacion {
 
     static void iniciarListasDeSeres()  {
         // creacion de plantas y animales, se hace solamente una vez
+        /*  aqui los dos for se pueden unificar en un método con wildcard, pero si
+        se hace eso se dificulta dar independencia de comportamiento a las plantas */
         if (Ajustes.iniciarSeresEnAreasRectangulares) {
             iniciarSeresEnRectangulos();
         }  // if

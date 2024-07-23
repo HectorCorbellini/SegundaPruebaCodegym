@@ -29,9 +29,9 @@ public class Salida implements Serializable {  // REVISAAAR!!!!
         return buffParaGuardar;
     }  // method
 
-    static void hacerEstadistica(int momentos, BufferedWriter bufferCSV)  {
-    String estadistica = Ajustes.traerEstadistica(momentos, Lista.animales.size(), Lista.plantas.size());
-    guardarArchivoCSV(bufferCSV, estadistica);
+    static void hacerEstadistica()  {
+    String estadistica = Ajustes.traerEstadistica(Lista.animales.size(), Lista.plantas.size());
+    guardarArchivoCSV(estadistica);
     reiniciarVariables();
     }  // method
 
@@ -41,19 +41,19 @@ public class Salida implements Serializable {  // REVISAAAR!!!!
         muertes = 0;
     } // method
 
-    static void guardarArchivoCSV(BufferedWriter buffParaGuardar, String estadistica) {
+    static void guardarArchivoCSV(String estadistica) {
         try {
-            buffParaGuardar.write(estadistica);  // añado al archivo la linea
-            buffParaGuardar.newLine();
+            Main.bufferCSV.write(estadistica);  // añado al archivo la linea
+            Main.bufferCSV.newLine();
         } catch (IOException e) { throw new RuntimeException(e); }
     }  // method
 
-    static void accionesDeCierre(int momentos, BufferedWriter bufferCSV)  {
+    static void accionesDeCierre()  {
         try {
-            bufferCSV.close();
+            Main.bufferCSV.close();
         } catch (IOException e) {
             throw new RuntimeException(e);  }
-        if (momentos == Ajustes.maxTiempo) System.out.println("Tiempo agotado.");
+        if (Main.momento == Ajustes.maxTiempo) System.out.println("Tiempo agotado.");
         else System.out.println("La vida se desequilibró.");
     }  // method
 

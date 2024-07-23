@@ -11,7 +11,7 @@ public class Vida {
             Salida.evento("no hay vida suficiente");
         int topeDeAnimales = (Ajustes.largoTablero * Ajustes.altoTablero) - Lista.plantas.size();
         boolean hayDemasiadaVida = false;
-        if (!(Lista.animales.size() < topeDeAnimales)) {
+        if (Lista.animales.size() > topeDeAnimales) {
             hayDemasiadaVida = true;
             Salida.evento("vida supera el tablero");
         }  // if

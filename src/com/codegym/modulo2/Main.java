@@ -7,19 +7,29 @@ cd "CODEGYM linux"/JuegoIsla/out/artifacts/juegoisla_jar/
 java -jar JuegoVidaMio.jar
 */
 public class Main {
+	static boolean vidaEquilibrada = true;
+	static BufferedWriter bufferCSV = Salida.iniciarCSV();
+	static int momento = 1;
+
 	public static void main(String[] args)  {
 		Creacion.iniciarListasDeSeres();
-		BufferedWriter bufferCSV = Salida.iniciarCSV();
-		int momentos = 1;
-		boolean vidaEquilibrada = true;
-		while (momentos < Ajustes.maxTiempo && vidaEquilibrada) {
+		while (momento < Ajustes.maxTiempo && vidaEquilibrada) {
+			Thread estadistica = new Thread(Salida::hacerEstadistica);
+			Thread vida = new Thread(() -> {
+				vidaEquilibrada = Vida.recrearla();
+			});
 		    Tablero.colocarLosSeres();
-			Salida.hacerEstadistica(momentos, bufferCSV);
+			estadistica.start(); // manejo de archivo CVS
+			vida.start();        // manejo lógico de la vida
 			Ajustes.transcurreEsteMomento();
-			vidaEquilibrada = Vida.recrearla();
-			momentos++;
+			try {
+				estadistica.join();  // Se supone el manejo de archivo demorará más
+				vida.join();         // que los cálculos lógicos
+			} catch (InterruptedException e) {
+				e.printStackTrace();  }
+			momento++;
 		} // while
-		Salida.accionesDeCierre(momentos, bufferCSV);
+		Salida.accionesDeCierre();
 	} // main
 
 } // class

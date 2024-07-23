@@ -17,7 +17,7 @@ class Animal extends Ser {
             Animal animal = moverUnAnimal(i);
             animal.setEnergia(animal.getEnergia() - 1);
             if (animal.getEnergia() > 0) // si llega muerto no tiene poder de cambio
-                Lista.consecuenciasDeUnMovimiento(animal);
+                Animal.consecuenciasDeUnMovimiento(animal);
         } // end for
     } // method
 
