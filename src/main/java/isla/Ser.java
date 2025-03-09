@@ -62,39 +62,6 @@ public class Ser {
         Salida.nacimientos++;
     } // method
 
-    public static void consecuenciasDeUnMovimiento(Animal animalQueLlegoAEstaCelda) {
-        // al haberse movido un animal hay que controlar las consecuencias
-        consecuenciasParaPlantas(animalQueLlegoAEstaCelda);
-        consecuenciasParaAnimales(animalQueLlegoAEstaCelda);
-    } // method
 
-    static void consecuenciasParaPlantas(Animal animalQueLlegoAqui) {
-        boolean alliTambienHayUnaPlanta;
-        for (Planta p : GestorPoblacion.plantas) {
-            alliTambienHayUnaPlanta = (p.getX() == animalQueLlegoAqui.getX()
-                    && p.getY() == animalQueLlegoAqui.getY());
-            if (alliTambienHayUnaPlanta)  {
-                comerPlanta(p, animalQueLlegoAqui);
-                break; // solo puede haber una sola planta alli
-            }  // if
-        }  // for
-    } // method
-    static void consecuenciasParaAnimales(Animal animalQueLlegoAqui) {
-        boolean alliTambienHayOtroAnimal;
-        if (animalQueLlegoAqui.getEdad() >= Ajustes.EDAD_REPRODUCTIVA)  {
-            for (Animal a: GestorPoblacion.animales) {
-                alliTambienHayOtroAnimal = (a.getX() == animalQueLlegoAqui.getX()
-                        && a.getY() == animalQueLlegoAqui.getY())
-                        && (a.getDibujo() != animalQueLlegoAqui.getDibujo());
-                boolean tambienEsMayorDeEdad = a.getEdad() >= Ajustes.EDAD_REPRODUCTIVA;
-                if (alliTambienHayOtroAnimal && tambienEsMayorDeEdad) {
-                    aparearseAnimales(animalQueLlegoAqui);
-                    a.setEnergia(a.getEnergia() - 1);
-                    animalQueLlegoAqui.setEnergia(animalQueLlegoAqui.getEnergia() - 1);
-                    break; // no me hago cargo de si hay mas animales en esa celda
-                }  // if
-            }  // for
-        }  // if
-    } // method
 
 } // class

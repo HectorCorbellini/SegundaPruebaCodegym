@@ -7,6 +7,7 @@ package isla;
 public class Ajustes {
     // Configuración de tiempo y simulación
     static final int DURACION_MAXIMA_SIMULACION = 30;  // Antes maxTiempo
+    static int momento = 1;
     static final int PAUSA_ENTRE_CICLOS = 1000;        // Milisegundos, antes lentitudDeJuego
 
     // Dimensiones del tablero
@@ -57,7 +58,7 @@ public class Ajustes {
      */
     static String traerEstadistica(int animales, int plantas) {
         System.out.println("Tiempo;Animales;Plantas;Nacimientos;Muertes;Eventos");
-        String datos = Main.momento + ";" + animales + ";" + plantas +
+        String datos = momento + ";" + animales + ";" + plantas +
                 ";" + Salida.nacimientos + ";" + Salida.muertes + ";" + Salida.eventos;
         System.out.println(datos);
         return datos;

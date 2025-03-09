@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class Salida {
+    private static BufferedWriter bufferCSV;
     static int muertes = 0;
     static int nacimientos = 0;
     static StringBuilder eventos = new StringBuilder();
@@ -14,17 +15,15 @@ public class Salida {
         eventos.append("/").append(evento).append(" ");
     } // method
 
-    static BufferedWriter iniciarCSV()  {
+    static void iniciarCSV()  {
         String rutaSalida = "/root/my-applications/CODEGYM-TODO/ISLA_2025/CSV.txt";
-        BufferedWriter buffParaGuardar;
         try {
             FileWriter writer = new FileWriter(rutaSalida, true);
-            buffParaGuardar = new BufferedWriter(writer);
-            buffParaGuardar.write("Tiempo;Animales;Plantas;Nacimientos;Muertes;Eventos");
-            buffParaGuardar.newLine();
+            bufferCSV = new BufferedWriter(writer);
+            bufferCSV.write("Tiempo;Animales;Plantas;Nacimientos;Muertes;Eventos");
+            bufferCSV.newLine();
         } catch (IOException e) {
             throw new RuntimeException(e); }
-        return buffParaGuardar;
     }  // method
 
     static void hacerEstadistica()  {
@@ -41,17 +40,17 @@ public class Salida {
 
     static void guardarArchivoCSV(String estadistica) {
         try {
-            Main.bufferCSV.write(estadistica);  // añado al archivo la linea
-            Main.bufferCSV.newLine();
+            bufferCSV.write(estadistica);  // añado al archivo la linea
+            bufferCSV.newLine();
         } catch (IOException e) { throw new RuntimeException(e); }
     }  // method
 
     static void accionesDeCierre()  {
         try {
-            Main.bufferCSV.close();
+            bufferCSV.close();
         } catch (IOException e) {
             throw new RuntimeException(e);  }
-        if (Main.momento == Ajustes.DURACION_MAXIMA_SIMULACION) System.out.println("Tiempo agotado.");
+        if (Ajustes.momento == Ajustes.DURACION_MAXIMA_SIMULACION) System.out.println("Tiempo agotado.");
         else System.out.println("La vida se desequilibró.");
     }  // method
 

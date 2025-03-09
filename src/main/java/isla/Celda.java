@@ -5,9 +5,10 @@ import java.util.HashSet;
 import java.util.List;
 
 public class Celda {
+    public static final char CHAR_NULO = '.';
     private final int x;
     private final int y;  // INTENTAR QUITAR ESTOS 2 CAMPOS
-    private char simbolo = Tablero.CHAR_NULO;
+    private char simbolo = CHAR_NULO;
     private final List<Ser> seresVivosEnCelda  = new ArrayList<>(0);
 
     public Celda(int x, int y) {
@@ -42,7 +43,7 @@ public class Celda {
     }
     void agregarSimbolo() {
         switch (cantidadDeSeresAqui()) {
-            case 0 -> setSimbolo(Tablero.CHAR_NULO);
+            case 0 -> setSimbolo(CHAR_NULO);
             case 1 -> setSimbolo(traerDibujoDelSerVivo());
             case 2 -> setSimbolo('2');
             case 3 -> setSimbolo('3');

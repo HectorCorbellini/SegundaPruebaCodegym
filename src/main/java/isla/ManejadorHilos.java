@@ -1,53 +1,37 @@
 package isla;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 /**
- * Clase responsable de manejar la creación y sincronización de hilos para la simulación.
+ * Maneja la ejecución de los ciclos de la simulación utilizando múltiples hilos.
  */
 public class ManejadorHilos {
-    private Thread hiloEstadistica;
-    private Thread hiloVida;
+    
+    private static final int NUMERO_HILOS = Runtime.getRuntime().availableProcessors();
+    private final ExecutorService executor;
     private boolean vidaEquilibrada;
 
     public ManejadorHilos() {
+        this.executor = Executors.newFixedThreadPool(NUMERO_HILOS);
         this.vidaEquilibrada = true;
+    }
+
+    public void ejecutarCiclo() {
+        executor.execute(() -> vidaEquilibrada = Vida.recrearla());
+        executor.execute(Salida::hacerEstadistica);
+        try {
+            Thread.sleep(Ajustes.PAUSA_ENTRE_CICLOS);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
     }
 
     public boolean isVidaEquilibrada() {
         return vidaEquilibrada;
     }
-
-    public void crearHilos() {
-        hiloEstadistica = new Thread(Salida::hacerEstadistica);
-        hiloVida = new Thread(() -> {
-            vidaEquilibrada = Vida.recrearla();
-        });
-    }
-
-    public void iniciarHilos() {
-        Tablero.colocarLosSeres();
-        hiloEstadistica.start(); // manejo de archivo CVS
-        hiloVida.start();        // manejo lógico de la vida
-        Ajustes.transcurreEsteMomento();
-    }
-
-    public void esperarFinalizacionHilos() {
-        try {
-            hiloEstadistica.join();  // Se supone el manejo de archivo demorará más
-            hiloVida.join();         // que los cálculos lógicos
-        } catch (InterruptedException e) {
-            manejarErrorInterrupcion(e);
-        }
-    }
-
-    private void manejarErrorInterrupcion(InterruptedException e) {
-        System.err.println("Error en la sincronización de hilos: " + e.getMessage());
-        e.printStackTrace();
-        Thread.currentThread().interrupt(); // Restaurar el estado de interrupción
-    }
-
-    public void ejecutarCiclo() {
-        crearHilos();
-        iniciarHilos();
-        esperarFinalizacionHilos();
+    
+    public void detenerHilos() {
+        executor.shutdown();
     }
 }

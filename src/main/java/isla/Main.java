@@ -6,9 +6,7 @@ import java.io.BufferedWriter;
  * Clase principal que controla la simulación del ecosistema.
  */
 public class Main {
-    static BufferedWriter bufferCSV = Salida.iniciarCSV();
-    static int momento = 1;
-    static ManejadorHilos manejadorHilos = new ManejadorHilos();
+    private static final ManejadorHilos manejadorHilos = new ManejadorHilos();
 
     public static void main(String[] args) {
         iniciarSimulacion();
@@ -17,21 +15,23 @@ public class Main {
     }
 
     private static void iniciarSimulacion() {
+        Salida.iniciarCSV();
         Creacion.iniciarListasDeSeres();
     }
 
     private static void ejecutarCicloDeVida() {
-        while (continuarSimulacion()) {
+        while (debeContinuarSimulacion()) {
             manejadorHilos.ejecutarCiclo();
-            momento++;
+            Ajustes.momento++;
         }
     }
 
-    private static boolean continuarSimulacion() {
-        return momento < Ajustes.DURACION_MAXIMA_SIMULACION && manejadorHilos.isVidaEquilibrada();
+    private static boolean debeContinuarSimulacion() {
+        return Ajustes.momento < Ajustes.DURACION_MAXIMA_SIMULACION && manejadorHilos.isVidaEquilibrada();
     }
 
     private static void finalizarSimulacion() {
+        manejadorHilos.detenerHilos();
         Salida.accionesDeCierre();
     }
 }
