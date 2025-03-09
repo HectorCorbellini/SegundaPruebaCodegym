@@ -14,52 +14,52 @@ import java.util.Set;
 
 public class Creacion {
     //   final int cantCeldasTotales = Ajustes.largoTablero * Ajustes.altoTablero;
-    static int priCeldaX = Ajustes.primeraCeldaSeres.getX();
-    static int priCeldaY = Ajustes.primeraCeldaSeres.getY();
-    static int ultCeldaX = Ajustes.ultimaCeldaSeres.getX();
-    static int ultCeldaY = Ajustes.ultimaCeldaSeres.getY();
+    static int priCeldaX = Ajustes.ESQUINA_SUPERIOR_IZQUIERDA.getX();
+    static int priCeldaY = Ajustes.ESQUINA_SUPERIOR_IZQUIERDA.getY();
+    static int ultCeldaX = Ajustes.ESQUINA_INFERIOR_DERECHA.getX();
+    static int ultCeldaY = Ajustes.ESQUINA_INFERIOR_DERECHA.getY();
     static final int cantCeldasRectangulo = ((ultCeldaX-priCeldaX) * (ultCeldaY-priCeldaY));
     static Set<Celda> celdasLibres = new HashSet<>(cantCeldasRectangulo);
-    static int cantAnimales = Ajustes.cantidadInicialAnimales;
-    static int cantPlantas = Ajustes.cantidadInicialPlantas;
+    static int cantAnimales = Ajustes.POBLACION_INICIAL_ANIMALES;
+    static int cantPlantas = Ajustes.POBLACION_INICIAL_PLANTAS;
     static char dibujoCambianteAnimal = 'A';
     static char dibujoCambiantePlanta = 'o';
 
     static void iniciarListasDeSeres()  {
         // creacion de plantas y animales, se hace solamente una vez
-        if (Ajustes.iniciarSeresEnAreasRectangulares) {
+        if (Ajustes.USAR_AREA_RECTANGULAR) {
             iniciarSeresEnRectangulos();
         }  // if
         else iniciarSeresPorLineas();
     }  // method
 
     static void iniciarSeresEnRectangulos()  {
-        if ((cantAnimales + cantPlantas) < (Ajustes.largoTablero * Ajustes.altoTablero)) {
+        if ((cantAnimales + cantPlantas) < (Ajustes.ANCHO_TABLERO * Ajustes.ALTO_TABLERO)) {
             ArrayList<Ser> seres;
             // animales
             seres = asignarCeldasEnRectangulo(cantAnimales,dibujoCambianteAnimal);
             for (Ser ser : seres)
-                Lista.animales.add(new Animal(ser.getX(),ser.getY(),ser.getDibujo()));
+                GestorPoblacion.agregarAnimal(new Animal(ser.getX(),ser.getY(),ser.getDibujo()));
             // plantas
             seres = asignarCeldasEnRectangulo(cantPlantas,dibujoCambiantePlanta);
             for (Ser ser : seres)
-                Lista.plantas.add(new Planta(ser.getX(),ser.getY(),ser.getDibujo()));
+                GestorPoblacion.agregarPlanta(new Planta(ser.getX(),ser.getY(),ser.getDibujo()));
         }  // if
         else System.out.println("Seres exceden tablero");
     }   // method
 
     static void iniciarSeresPorLineas() {
-        for (int i = 0; i < Ajustes.cantidadInicialAnimales; i++) {
+        for (int i = 0; i < Ajustes.POBLACION_INICIAL_ANIMALES; i++) {
             int x = 0+i;
             int y = 0+i;
             Animal animal = new Animal(x,y,dibujoCambianteAnimal++);
-            Lista.animales.add(animal);
+            GestorPoblacion.agregarAnimal(animal);
         }  // for animales
-        for (int i = 0; i < Ajustes.cantidadInicialPlantas; i++) {
+        for (int i = 0; i < Ajustes.POBLACION_INICIAL_PLANTAS; i++) {
             int x = 5+i;
             int y = 2+i;
             Planta planta = new Planta(x,y, dibujoCambiantePlanta++);
-            Lista.plantas.add(planta);
+            GestorPoblacion.agregarPlanta(planta);
         }  // for plantas
     }  // method
 

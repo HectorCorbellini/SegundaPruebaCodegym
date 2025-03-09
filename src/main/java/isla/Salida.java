@@ -15,7 +15,7 @@ public class Salida {
     } // method
 
     static BufferedWriter iniciarCSV()  {
-        String rutaSalida = "/home/uko/Documents/CSV.txt";
+        String rutaSalida = "/root/my-applications/CODEGYM-TODO/ISLA_2025/CSV.txt";
         BufferedWriter buffParaGuardar;
         try {
             FileWriter writer = new FileWriter(rutaSalida, true);
@@ -28,7 +28,7 @@ public class Salida {
     }  // method
 
     static void hacerEstadistica()  {
-        String estadistica = Ajustes.traerEstadistica(Lista.animales.size(), Lista.plantas.size());
+        String estadistica = Ajustes.traerEstadistica(GestorPoblacion.animales.size(), GestorPoblacion.plantas.size());
         guardarArchivoCSV(estadistica);
         reiniciarVariables();
     }  // method
@@ -51,7 +51,7 @@ public class Salida {
             Main.bufferCSV.close();
         } catch (IOException e) {
             throw new RuntimeException(e);  }
-        if (Main.momento == Ajustes.maxTiempo) System.out.println("Tiempo agotado.");
+        if (Main.momento == Ajustes.DURACION_MAXIMA_SIMULACION) System.out.println("Tiempo agotado.");
         else System.out.println("La vida se desequilibró.");
     }  // method
 

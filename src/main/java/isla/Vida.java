@@ -9,9 +9,9 @@ public class Vida {
             actualizarVidaAEsteMomento();
         else
             Salida.evento("no hay vida suficiente");
-        int topeDeAnimales = (Ajustes.largoTablero * Ajustes.altoTablero) - Lista.plantas.size();
+        int topeDeAnimales = (Ajustes.ANCHO_TABLERO * Ajustes.ALTO_TABLERO) - GestorPoblacion.plantas.size();
         boolean hayDemasiadaVida = false;
-        if (Lista.animales.size() > topeDeAnimales) {
+        if (GestorPoblacion.animales.size() > topeDeAnimales) {
             hayDemasiadaVida = true;
             Salida.evento("vida supera el tablero");
         }  // if
@@ -20,7 +20,7 @@ public class Vida {
 
     static boolean moverVida() {
         boolean hayVidaSuficiente;
-        if (!Lista.animales.isEmpty()) {
+        if (!GestorPoblacion.animales.isEmpty()) {
             hayVidaSuficiente = true;
             Animal.moverlosTodosUnaCelda();
         } // if
@@ -29,13 +29,13 @@ public class Vida {
     }  // method
 
     static void actualizarVidaAEsteMomento() {
-        Lista.aumentarUnidadEdadDeAnimales();
-        Lista.matarAnimalesViejos();
-        if (!Lista.animales.isEmpty())
-            Lista.matarAnimalesDesenergizados();
-        Lista.matarPlantasDesenergizadas();
-        if (!Lista.plantas.isEmpty())
-            Lista.aumentarUnidadEnergiaDePlantas();
+        GestorPoblacion.aumentarUnidadEdadDeAnimales();
+        GestorPoblacion.eliminarAnimalesMuertos();
+        if (!GestorPoblacion.animales.isEmpty())
+            GestorPoblacion.eliminarAnimalesDesenergizados();
+        GestorPoblacion.eliminarPlantasMuertas();
+        if (!GestorPoblacion.plantas.isEmpty())
+            GestorPoblacion.aumentarUnidadEnergiaDePlantas();
     }  // method
 
 } // class

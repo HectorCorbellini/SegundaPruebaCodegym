@@ -13,7 +13,7 @@ class Animal extends Ser {
     }
 
     static void moverlosTodosUnaCelda() {
-        for (int i = 0; i < Lista.animales.size(); i++) {
+        for (int i = 0; i < GestorPoblacion.animales.size(); i++) {
             Animal animal = moverUnAnimal(i);
             animal.setEnergia(animal.getEnergia() - 1);
             if (animal.getEnergia() > 0) // si llega muerto no tiene poder de cambio
@@ -22,18 +22,18 @@ class Animal extends Ser {
     } // method
 
     static Animal moverUnAnimal(int posicionLista) {
-        Animal animalMoviente = Lista.getAnimal(posicionLista);
-        if (Ajustes.moverConVecindadMoore) {
+        Animal animalMoviente = GestorPoblacion.getAnimal(posicionLista);
+        if (Ajustes.USAR_VECINDAD_MOORE) {
             moverConMoore(animalMoviente);
         } else
             moverConVonNeumann(animalMoviente);
-        Lista.setAnimal(posicionLista, animalMoviente);
+        // Animal is modified in place, no need to set it back
         return animalMoviente;
     } // method
 
     static void moverConMoore (Animal animal)  {
-        int nuevoX = Random.cambiarCoordenada(animal.getX(), Ajustes.largoTablero);
-        int nuevoY = Random.cambiarCoordenada(animal.getY(), Ajustes.altoTablero);
+        int nuevoX = Random.cambiarCoordenada(animal.getX(), Ajustes.ANCHO_TABLERO);
+        int nuevoY = Random.cambiarCoordenada(animal.getY(), Ajustes.ALTO_TABLERO);
         animal.setX(nuevoX);
         animal.setY(nuevoY);
     } // method
@@ -41,10 +41,10 @@ class Animal extends Ser {
     static void moverConVonNeumann (Animal animal)  {
         boolean cambiarSoloX = Random.arrojarMonedaAlAire();
         if (cambiarSoloX)  {
-            animal.setX(Random.cambiarCoordenada(animal.getX(), Ajustes.largoTablero));
+            animal.setX(Random.cambiarCoordenada(animal.getX(), Ajustes.ANCHO_TABLERO));
         } // if
         else  {  // cambiarSoloY
-            animal.setY(Random.cambiarCoordenada(animal.getY(), Ajustes.altoTablero));
+            animal.setY(Random.cambiarCoordenada(animal.getY(), Ajustes.ALTO_TABLERO));
         } // else
     } // method
 

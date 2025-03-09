@@ -4,8 +4,8 @@ public class Ser {
     private int x;
     private int y;
     private final char dibujo;
-    private int energia = Ajustes.energiaInicialDeSeres;
-    static final int energiaIntercambiada = Ajustes.energiaIntercambiadaEntrePlantaYAnimal;
+    private int energia = Ajustes.ENERGIA_INICIAL;
+    static final int energiaIntercambiada = Ajustes.ENERGIA_TRANSFERIDA;
 
     public Ser (int x, int y, char dibujo) {
         this.x = x; // puede agregarse validacion
@@ -37,8 +37,8 @@ public class Ser {
 
     public static void comerPlanta(Planta planta, Animal animal) {
         int nuevaEnergiaDelAnimal = animal.getEnergia() + energiaIntercambiada;
-        if (nuevaEnergiaDelAnimal > Ajustes.energiaTopeAnimal)
-            nuevaEnergiaDelAnimal = Ajustes.energiaTopeAnimal;
+        if (nuevaEnergiaDelAnimal > Ajustes.ENERGIA_MAXIMA_ANIMAL)
+            nuevaEnergiaDelAnimal = Ajustes.ENERGIA_MAXIMA_ANIMAL;
         animal.setEnergia(nuevaEnergiaDelAnimal);
         planta.setEnergia(planta.getEnergia() - energiaIntercambiada);
         Salida.evento(animal.getDibujo()+" masticó "+planta.getDibujo());
@@ -57,7 +57,7 @@ public class Ser {
 
     public static void crearElHijo(int nuevoX, int nuevoY, char nuevoDibujo) {
         Animal nuevoAnimal = new Animal(nuevoX,nuevoY,nuevoDibujo);
-        Lista.animales.add(nuevoAnimal);
+        GestorPoblacion.agregarAnimal(nuevoAnimal);
         Salida.evento("hijo "+nuevoDibujo+" creado en ["+nuevoX+","+nuevoY+"]");
         Salida.nacimientos++;
     } // method
@@ -70,7 +70,7 @@ public class Ser {
 
     static void consecuenciasParaPlantas(Animal animalQueLlegoAqui) {
         boolean alliTambienHayUnaPlanta;
-        for (Planta p : Lista.plantas) {
+        for (Planta p : GestorPoblacion.plantas) {
             alliTambienHayUnaPlanta = (p.getX() == animalQueLlegoAqui.getX()
                     && p.getY() == animalQueLlegoAqui.getY());
             if (alliTambienHayUnaPlanta)  {
@@ -81,12 +81,12 @@ public class Ser {
     } // method
     static void consecuenciasParaAnimales(Animal animalQueLlegoAqui) {
         boolean alliTambienHayOtroAnimal;
-        if (animalQueLlegoAqui.getEdad() >= Ajustes.edadReproductivaAnimal)  {
-            for (Animal a: Lista.animales) {
+        if (animalQueLlegoAqui.getEdad() >= Ajustes.EDAD_REPRODUCTIVA)  {
+            for (Animal a: GestorPoblacion.animales) {
                 alliTambienHayOtroAnimal = (a.getX() == animalQueLlegoAqui.getX()
                         && a.getY() == animalQueLlegoAqui.getY())
                         && (a.getDibujo() != animalQueLlegoAqui.getDibujo());
-                boolean tambienEsMayorDeEdad = a.getEdad() >= Ajustes.edadReproductivaAnimal;
+                boolean tambienEsMayorDeEdad = a.getEdad() >= Ajustes.EDAD_REPRODUCTIVA;
                 if (alliTambienHayOtroAnimal && tambienEsMayorDeEdad) {
                     aparearseAnimales(animalQueLlegoAqui);
                     a.setEnergia(a.getEnergia() - 1);

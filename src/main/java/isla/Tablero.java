@@ -2,11 +2,11 @@ package isla;
 
 public class Tablero {
     public static final char CHAR_NULO = '.';
-    private static final Celda[][] tablero = new Celda[Ajustes.largoTablero][Ajustes.altoTablero];
+    private static final Celda[][] tablero = new Celda[Ajustes.ANCHO_TABLERO][Ajustes.ALTO_TABLERO];
 
     static void cargarloVacio() {
-        for (int x = 0; x < Ajustes.largoTablero; x++)
-            for (int y = 0; y < Ajustes.altoTablero; y++) {
+        for (int x = 0; x < Ajustes.ANCHO_TABLERO; x++)
+            for (int y = 0; y < Ajustes.ALTO_TABLERO; y++) {
                 Celda celda = new Celda(x,y);
                 tablero[x][y] = celda;
             } // for
@@ -23,15 +23,15 @@ public class Tablero {
         cargarloVacio();
         agregarLosAnimales();
         agregarLasPlantas();
-        Pantalla.limpieza();
+        limpiarPantalla();
         mostrarlo();
     } // method
 
     static void mostrarlo() {  // REESCRIBIRLO CON toString
         System.out.println();
         // es necesario que primero se impriman las columnas
-        for (int y = 0; y < Ajustes.altoTablero; y++) {
-            for (int x = 0; x < Ajustes.largoTablero; x++) { // se imprime de a caracter
+        for (int y = 0; y < Ajustes.ALTO_TABLERO; y++) {
+            for (int x = 0; x < Ajustes.ANCHO_TABLERO; x++) { // se imprime de a caracter
                 Celda celda = tablero[x][y];
                 System.out.print(celda.getSimbolo());
             } // for x
@@ -41,19 +41,24 @@ public class Tablero {
     } // method
 
     static void agregarLosAnimales () {
-        if (!Lista.animales.isEmpty())
-            for (Animal animal : Lista.animales) {
+        if (!GestorPoblacion.animales.isEmpty())
+            for (Animal animal : GestorPoblacion.animales) {
                 agregar(animal);
             } // for
         else Salida.evento("no hay animales");
     }  // method
 
     static void agregarLasPlantas() {  // CAMBIAR A HASHSET
-        if (!Lista.plantas.isEmpty())
-            for (Planta planta : Lista.plantas) {
+        if (!GestorPoblacion.plantas.isEmpty())
+            for (Planta planta : GestorPoblacion.plantas) {
                 agregar(planta);
             } // for
         else Salida.evento("no hay plantas");
     }  // method
 
+    private static void limpiarPantalla() {
+        // FUNCIONA SOLO EN TERMINAL, y a medias
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+    }
 } // class
