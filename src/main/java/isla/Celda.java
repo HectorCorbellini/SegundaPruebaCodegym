@@ -6,8 +6,8 @@ import java.util.List;
 
 public class Celda {
     public static final char CHAR_NULO = '.';
-    private final int x;
-    private final int y;  // INTENTAR QUITAR ESTOS 2 CAMPOS
+    private int x;
+    private int y;
     private char simbolo = CHAR_NULO;
     private final List<Ser> seresVivosEnCelda  = new ArrayList<>(0);
 
@@ -57,7 +57,7 @@ public class Celda {
 
     public char traerDibujoDelSerVivo() {
         if (seresVivosEnCelda.size() == 1)  {
-            Ser unicoSer = seresVivosEnCelda.getFirst();
+            Ser unicoSer = seresVivosEnCelda.get(0);
             return unicoSer.getDibujo();
         }  // if
         else  {  System.out.println("Fallo. No hay un único ser aqui.");
@@ -68,7 +68,7 @@ public class Celda {
         // eleccion aleatoria de celda libre
         HashSet<Celda> celdasPosibles = vecinosVonNeumann(x,y);
         boolean celdaParaHijoEstaLibre = true;
-        HashSet<Ser> seres = GestorPoblacion.todosLosSeres();
+        List<Ser> seres = GestorPoblacion.todosLosSeres();
         for (Celda celdaP : celdasPosibles) {
             for (Ser ser : seres) {               // MEJOR USAR WHILE
                 if (celdaP.getX() == ser.getX() && celdaP.getY() == ser.getY()) {
@@ -81,14 +81,24 @@ public class Celda {
         } // for celdasPosibles
         return null;
     } // method
+    
+    /**
+     * Reinicia el estado de la celda para su reutilización en el pool de objetos.
+     * Limpia la lista de seres vivos y restablece el símbolo al valor por defecto.
+     */
+    public void reiniciar() {
+        seresVivosEnCelda.clear();
+        simbolo = CHAR_NULO;
+    }
 
     private static HashSet<Celda> vecinosVonNeumann(int x, int y) {
         // REUSAR ESTE METODO PARA MOVER UN ANIMAL
+        CeldaPool pool = CeldaPool.obtenerInstancia();
         HashSet<Celda> vecinosVonNeu = new HashSet<>();
-        if (y > 0) vecinosVonNeu.add(new Celda(x,y-1));
-        if (y < Ajustes.ALTO_TABLERO-1) vecinosVonNeu.add(new Celda(x,y+1));
-        if (x > 0) vecinosVonNeu.add(new Celda(x-1,y));
-        if (x < Ajustes.ANCHO_TABLERO-1) vecinosVonNeu.add(new Celda(x+1,y));
+        if (y > 0) vecinosVonNeu.add(pool.obtenerCelda(x,y-1));
+        if (y < Ajustes.ALTO_TABLERO-1) vecinosVonNeu.add(pool.obtenerCelda(x,y+1));
+        if (x > 0) vecinosVonNeu.add(pool.obtenerCelda(x-1,y));
+        if (x < Ajustes.ANCHO_TABLERO-1) vecinosVonNeu.add(pool.obtenerCelda(x+1,y));
         return vecinosVonNeu;
     } // method
 

@@ -1,9 +1,9 @@
 package isla;
 
-public class Ser {
+public class Ser implements Resettable {
     private int x;
     private int y;
-    private final char dibujo;
+    private char dibujo;
     private int energia = Ajustes.ENERGIA_INICIAL;
     static final int energiaIntercambiada = Ajustes.ENERGIA_TRANSFERIDA;
 
@@ -22,14 +22,40 @@ public class Ser {
     public char getDibujo() {
         return dibujo;
     }
+
+    public void setDibujo(char dibujo) {
+        this.dibujo = dibujo;
+    }
     public int getEnergia() {
         return energia;
     }
     public void setX(int x) {
+        int oldX = this.x;
         this.x = x;
+        // Actualizar posición en la cuadrícula espacial
+        SpatialGrid.obtenerInstancia().actualizarPosicion(this, oldX, this.y);
     }
+    
     public void setY(int y) {
+        int oldY = this.y;
         this.y = y;
+        // Actualizar posición en la cuadrícula espacial
+        SpatialGrid.obtenerInstancia().actualizarPosicion(this, this.x, oldY);
+    }
+    
+    /**
+     * Actualiza la posición (x,y) en una sola operación, optimizando la actualización
+     * en la cuadrícula espacial.
+     * @param x Nueva coordenada X
+     * @param y Nueva coordenada Y
+     */
+    public void setPosicion(int x, int y) {
+        int oldX = this.x;
+        int oldY = this.y;
+        this.x = x;
+        this.y = y;
+        // Actualizar posición en la cuadrícula espacial
+        SpatialGrid.obtenerInstancia().actualizarPosicion(this, oldX, oldY);
     }
     public void setEnergia(int energia) {
         this.energia = energia;
@@ -64,4 +90,11 @@ public class Ser {
 
 
 
+    @Override
+    public void reiniciar() {
+        energia = Ajustes.ENERGIA_INICIAL;
+        x = 0;
+        y = 0;
+        // No reiniciamos dibujo aquí, se establecerá al obtener la entidad del pool
+    }
 } // class

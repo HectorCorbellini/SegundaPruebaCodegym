@@ -1,6 +1,6 @@
 package isla;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -32,6 +32,9 @@ public class GestorPoblacion {
         } else if (ser instanceof Planta) {
             plantas.add((Planta) ser);
         }
+        
+        // Actualizar la cuadrícula espacial
+        SpatialGrid.obtenerInstancia().actualizarPosicion(ser, -1, -1);
     }
     
     public void eliminarSer(Ser ser) {
@@ -41,10 +44,13 @@ public class GestorPoblacion {
         } else if (ser instanceof Planta) {
             plantas.remove(ser);
         }
+        
+        // Eliminar de la cuadrícula espacial
+        SpatialGrid.obtenerInstancia().eliminarEntidad(ser);
     }
     
     public List<Ser> obtenerSeres() {
-        return new ArrayList<>(seres);
+        return new LinkedList<>(seres);
     }
     
     public int contarEspecies(Class<? extends Ser> tipo) {
@@ -60,8 +66,20 @@ public class GestorPoblacion {
         return animales.get(posicion);
     }
 
+    public static Animal crearAnimal(int x, int y, char dibujo) {
+        Animal animal = MemoryManager.obtenerInstancia().obtenerEntidad(Animal.class, x, y, dibujo);
+        agregarAnimal(animal);
+        return animal;
+    }
+
     public static void agregarAnimal(Animal animal) {
         instancia.agregarSer(animal);
+    }
+
+    public static Planta crearPlanta(int x, int y, char dibujo) {
+        Planta planta = MemoryManager.obtenerInstancia().obtenerEntidad(Planta.class, x, y, dibujo);
+        agregarPlanta(planta);
+        return planta;
     }
 
     public static void agregarPlanta(Planta planta) {
@@ -93,8 +111,31 @@ public class GestorPoblacion {
         // La lógica de muerte por falta de energía ahora está en el método consumirEnergia() de Ser
     }
 
-    static HashSet<Ser> todosLosSeres() {
-        return new HashSet<>(instancia.seres);
+    static List<Ser> todosLosSeres() {
+        return new LinkedList<>(instancia.seres);
+    }
+    
+    /**
+     * Encuentra seres cercanos a una posición dada.
+     * @param x Coordenada X
+     * @param y Coordenada Y
+     * @param radio Radio de búsqueda
+     * @return Lista de seres dentro del radio especificado
+     */
+    public static List<Ser> encontrarSeresCercanos(int x, int y, int radio) {
+        return SpatialGrid.obtenerInstancia().encontrarEntidadesCercanas(x, y, radio);
+    }
+    
+    /**
+     * Encuentra seres de un tipo específico cercanos a una posición.
+     * @param x Coordenada X
+     * @param y Coordenada Y
+     * @param radio Radio de búsqueda
+     * @param tipo Clase de los seres a buscar
+     * @return Lista de seres del tipo especificado dentro del radio
+     */
+    public static <T extends Ser> List<T> encontrarSeresCercanosPorTipo(int x, int y, int radio, Class<T> tipo) {
+        return SpatialGrid.obtenerInstancia().encontrarEntidadesPorTipo(x, y, radio, tipo);
     }
     
     /**
@@ -102,6 +143,7 @@ public class GestorPoblacion {
      */
     public static void eliminarAnimal(Animal animal) {
         instancia.eliminarSer(animal);
+        MemoryManager.obtenerInstancia().devolverEntidad(animal);
     }
     
     /**
@@ -109,5 +151,6 @@ public class GestorPoblacion {
      */
     public static void eliminarPlanta(Planta planta) {
         instancia.eliminarSer(planta);
+        MemoryManager.obtenerInstancia().devolverEntidad(planta);
     }
 } // class

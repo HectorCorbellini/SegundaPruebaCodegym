@@ -1,5 +1,8 @@
 package isla;
 
+import java.util.List;
+import java.util.concurrent.*;
+
 class Animal extends Ser {
     private int edad = 0;
     public Animal(int x, int y, char dibujo) {
@@ -13,12 +16,27 @@ class Animal extends Ser {
     }
 
     static void moverlosTodosUnaCelda() {
-        for (int i = 0; i < GestorPoblacion.animales.size(); i++) {
-            Animal animal = moverUnAnimal(i);
-            animal.setEnergia(animal.getEnergia() - 1);
-            if (animal.getEnergia() > 0) // si llega muerto no tiene poder de cambio
-                Animal.consecuenciasDeUnMovimiento(animal);
-        } // end for
+        ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        
+        try {
+            List<Future<?>> futures = new CopyOnWriteArrayList<>();
+            for (Animal animal : GestorPoblacion.animales) {
+                futures.add(executor.submit(() -> {
+                    Animal movedAnimal = moverUnAnimal(GestorPoblacion.animales.indexOf(animal));
+                    movedAnimal.setEnergia(movedAnimal.getEnergia() - 1);
+                    if (movedAnimal.getEnergia() > 0) {
+                        consecuenciasDeUnMovimiento(movedAnimal);
+                    }
+                }));
+            }
+            for (Future<?> future : futures) {
+                future.get();
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            Salida.evento("Error en procesamiento paralelo: " + e.getMessage());
+        } finally {
+            executor.shutdown();
+        }
     } // method
 
     static Animal moverUnAnimal(int posicionLista) {
@@ -34,18 +52,25 @@ class Animal extends Ser {
     static void moverConMoore (Animal animal)  {
         int nuevoX = Random.cambiarCoordenada(animal.getX(), Ajustes.ANCHO_TABLERO);
         int nuevoY = Random.cambiarCoordenada(animal.getY(), Ajustes.ALTO_TABLERO);
-        animal.setX(nuevoX);
-        animal.setY(nuevoY);
+        // Usar setPosicion para actualizar ambas coordenadas en una sola operación
+        // y evitar actualizaciones redundantes en la cuadrícula espacial
+        animal.setPosicion(nuevoX, nuevoY);
     } // method
 
     static void moverConVonNeumann (Animal animal)  {
         boolean cambiarSoloX = Random.arrojarMonedaAlAire();
+        int nuevoX = animal.getX();
+        int nuevoY = animal.getY();
+        
         if (cambiarSoloX)  {
-            animal.setX(Random.cambiarCoordenada(animal.getX(), Ajustes.ANCHO_TABLERO));
+            nuevoX = Random.cambiarCoordenada(animal.getX(), Ajustes.ANCHO_TABLERO);
         } // if
         else  {  // cambiarSoloY
-            animal.setY(Random.cambiarCoordenada(animal.getY(), Ajustes.ALTO_TABLERO));
+            nuevoY = Random.cambiarCoordenada(animal.getY(), Ajustes.ALTO_TABLERO);
         } // else
+        
+        // Usar setPosicion para actualizar ambas coordenadas en una sola operación
+        animal.setPosicion(nuevoX, nuevoY);
     } // method
     
     public static void consecuenciasDeUnMovimiento(Animal animalQueLlegoAEstaCelda) {
@@ -55,26 +80,26 @@ class Animal extends Ser {
     }
 
     static void consecuenciasParaPlantas(Animal animalQueLlegoAqui) {
-        boolean alliTambienHayUnaPlanta;
-        for (Planta p : GestorPoblacion.plantas) {
-            alliTambienHayUnaPlanta = (p.getX() == animalQueLlegoAqui.getX()
-                    && p.getY() == animalQueLlegoAqui.getY());
-            if (alliTambienHayUnaPlanta)  {
-                Ser.comerPlanta(p, animalQueLlegoAqui);
-                break; // solo puede haber una sola planta alli
-            }  // if
-        }  // for
+        // Usar el sistema de particionamiento espacial para encontrar plantas en la misma posición
+        List<Planta> plantasCercanas = GestorPoblacion.encontrarSeresCercanosPorTipo(
+                animalQueLlegoAqui.getX(), animalQueLlegoAqui.getY(), 0, Planta.class);
+        
+        if (!plantasCercanas.isEmpty()) {
+            // Solo puede haber una planta en la misma celda
+            Ser.comerPlanta(plantasCercanas.get(0), animalQueLlegoAqui);
+        }
     }
 
     static void consecuenciasParaAnimales(Animal animalQueLlegoAqui) {
-        boolean alliTambienHayOtroAnimal;
         if (animalQueLlegoAqui.getEdad() >= Ajustes.EDAD_REPRODUCTIVA)  {
-            for (Animal a: GestorPoblacion.animales) {
-                alliTambienHayOtroAnimal = (a.getX() == animalQueLlegoAqui.getX()
-                        && a.getY() == animalQueLlegoAqui.getY())
-                        && (a.getDibujo() != animalQueLlegoAqui.getDibujo());
-                boolean tambienEsMayorDeEdad = a.getEdad() >= Ajustes.EDAD_REPRODUCTIVA;
-                if (alliTambienHayOtroAnimal && tambienEsMayorDeEdad) {
+            // Usar el sistema de particionamiento espacial para encontrar animales en la misma posición
+            List<Animal> animalesCercanos = GestorPoblacion.encontrarSeresCercanosPorTipo(
+                    animalQueLlegoAqui.getX(), animalQueLlegoAqui.getY(), 0, Animal.class);
+            
+            for (Animal a: animalesCercanos) {
+                // Verificar que sea un animal diferente al que llegó
+                if (a.getDibujo() != animalQueLlegoAqui.getDibujo() && 
+                        a.getEdad() >= Ajustes.EDAD_REPRODUCTIVA) {
                     Ser.aparearseAnimales(animalQueLlegoAqui);
                     a.setEnergia(a.getEnergia() - 1);
                     animalQueLlegoAqui.setEnergia(animalQueLlegoAqui.getEnergia() - 1);

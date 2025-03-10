@@ -87,5 +87,79 @@ This document outlines the improvements made to the `GestorPoblacion` class and 
    - Confirmed that animals can move, consume energy, interact with plants, and reproduce as expected.
    - Maintained the core ecosystem dynamics while improving the underlying code structure.
 
+## Collection Optimization (March 2025)
+
+1. **ArrayList to LinkedList Conversion**
+   - Replaced `ArrayList` with `LinkedList` in specific methods where frequent additions and removals occur
+   - The `obtenerSeres()` method now returns a `LinkedList` instead of an `ArrayList` for better performance when elements are frequently added or removed
+   - The `todosLosSeres()` method now returns a `LinkedList` instead of a `HashSet`, maintaining order while providing efficient additions/removals
+
+2. **Performance Benefits**
+   - `LinkedList` provides O(1) time complexity for additions and removals at any position once the position is located
+   - This is particularly beneficial for the ecosystem simulation where entities are frequently added and removed
+   - While `ArrayList` has better random access performance, the simulation primarily uses sequential access and frequent modifications, making `LinkedList` more suitable
+
+3. **Memory Considerations**
+   - `LinkedList` has slightly higher memory overhead per element compared to `ArrayList`
+   - However, the performance benefits for frequent modifications outweigh this overhead in the ecosystem simulation context
+
+## Cache Optimization (March 2025)
+
+1. **2D to 1D Array Conversion**
+   - Replaced the 2D array (`Celda[][] celdas`) with a 1D array (`Celda[] celdas`) in the `Tablero` class
+   - Implemented a single index calculation formula: `position = y * width + x` to access elements
+   - Added a helper method `coordToIndex(int x, int y)` to encapsulate the index calculation logic
+
+2. **Cache Locality Improvements**
+   - The 1D array representation stores all grid elements in a contiguous memory block
+   - This improves CPU cache utilization by reducing cache misses during grid traversal
+   - Memory access patterns are now more predictable, leading to better performance
+
+3. **Technical Benefits**
+   - Reduced memory fragmentation compared to 2D arrays
+   - More efficient memory allocation and deallocation
+   - Improved performance for operations that traverse the entire grid sequentially
+   - Potential reduction in garbage collection overhead
+
+## Object Pooling Optimization (March 2025)
+
+1. **CeldaPool Implementation**
+   - Created a new `CeldaPool` class implementing the Object Pool design pattern
+   - Reuses `Celda` instances instead of creating new ones, significantly reducing garbage collection overhead
+   - Implemented with a thread-safe singleton pattern to ensure consistent access across the application
+
+2. **Celda Class Modifications**
+   - Modified `Celda` class to work with the object pool by making coordinates mutable
+   - Added a `reiniciar()` method to reset the state of recycled `Celda` objects
+   - Updated the `vecinosVonNeumann()` method to use the pool for obtaining neighboring cells
+
+3. **Performance Benefits**
+   - Reduced garbage collection pauses by minimizing object creation and destruction
+   - Improved memory usage by recycling objects instead of creating new ones
+   - Enhanced application responsiveness, especially during long simulation runs
+
+## Spatial Partitioning Optimization (March 2025)
+
+1. **SpatialGrid Implementation**
+   - Created a new `SpatialGrid` class that divides the simulation space into a grid of cells
+   - Implemented efficient entity lookup by spatial position using a hash-based approach
+   - Added methods for finding entities within a specific radius of a point
+
+2. **Entity Position Tracking**
+   - Modified the `Ser` class to update the spatial grid when entity positions change
+   - Added a new `setPosicion()` method to update both coordinates in a single operation
+   - Optimized position updates to minimize redundant spatial grid updates
+
+3. **Proximity Query Optimization**
+   - Implemented specialized methods for finding entities by type within a radius
+   - Updated the `Animal` class to use spatial queries instead of iterating through all entities
+   - Significantly improved performance for operations like finding nearby plants or animals
+
+4. **Technical Benefits**
+   - Reduced time complexity for proximity queries from O(n) to O(k) where k is the number of entities in proximity
+   - Eliminated unnecessary iterations through the entire entity list
+   - Improved scalability for simulations with large numbers of entities
+   - Enhanced performance for interaction checks between entities
+
 ## Conclusion
-These improvements significantly enhance the performance, reliability, and maintainability of the ecosystem simulation. The refactoring of the `Vida`, `Animal`, and `Planta` classes has improved the code organization while preserving the core functionality of the simulation. Future work can build upon this foundation to further enhance the ecosystem simulation with new features and optimizations.
+These improvements significantly enhance the performance, reliability, and maintainability of the ecosystem simulation. The refactoring of the `Vida`, `Animal`, and `Planta` classes has improved the code organization while preserving the core functionality of the simulation. The collection optimizations with `LinkedList` further enhance performance for operations involving frequent additions and removals of entities. The 1D array optimization improves cache locality, while object pooling reduces garbage collection overhead. The spatial partitioning system dramatically improves entity proximity queries. Together, these optimizations create a more efficient and scalable simulation that can handle larger ecosystems with better performance.

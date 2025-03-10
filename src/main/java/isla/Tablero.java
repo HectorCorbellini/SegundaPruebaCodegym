@@ -10,7 +10,7 @@ import java.util.Collections;
  * Thread-safe implementation of the ecosystem grid.
  */
 public class Tablero {
-    private final Celda[][] celdas;
+    private final Celda[] celdas;
     private final int ancho;
     private final int alto;
     private final ConcurrentHashMap<String, List<Celda>> neighborCache;
@@ -19,7 +19,7 @@ public class Tablero {
         validarDimensiones(ancho, alto);
         this.ancho = ancho;
         this.alto = alto;
-        this.celdas = new Celda[ancho][alto];
+        this.celdas = new Celda[ancho * alto];
         this.neighborCache = new ConcurrentHashMap<>();
         inicializarCeldas();
     }
@@ -34,9 +34,11 @@ public class Tablero {
     }
 
     private void inicializarCeldas() {
-        for (int x = 0; x < ancho; x++) {
-            for (int y = 0; y < alto; y++) {
-                celdas[x][y] = new Celda(x, y);
+        CeldaPool pool = CeldaPool.obtenerInstancia();
+        for (int y = 0; y < alto; y++) {
+            for (int x = 0; x < ancho; x++) {
+                int index = y * ancho + x;
+                celdas[index] = pool.obtenerCelda(x, y);
             }
         }
     }
@@ -46,7 +48,7 @@ public class Tablero {
             throw new IllegalArgumentException(
                 String.format("Posición fuera de los límites del tablero: x=%d, y=%d", x, y));
         }
-        return celdas[x][y];
+        return celdas[y * ancho + x];
     }
 
     public boolean esPosicionValida(int x, int y) {
@@ -70,7 +72,7 @@ public class Tablero {
             int newX = x + dir[0];
             int newY = y + dir[1];
             if (esPosicionValida(newX, newY)) {
-                vecinos.add(celdas[newX][newY]);
+                vecinos.add(celdas[newY * ancho + newX]);
             }
         }
         return Collections.unmodifiableList(vecinos);
@@ -90,13 +92,34 @@ public class Tablero {
     public void limpiarCache() {
         neighborCache.clear();
     }
+    
+    /**
+     * Convierte coordenadas x,y a índice en el array unidimensional
+     * @param x coordenada x
+     * @param y coordenada y
+     * @return índice en el array unidimensional
+     */
+    private int coordToIndex(int x, int y) {
+        return y * ancho + x;
+    }
+
+    public void limpiarCeldas() {
+        CeldaPool pool = CeldaPool.obtenerInstancia();
+        for (int y = 0; y < alto; y++) {
+            for (int x = 0; x < ancho; x++) {
+                int index = y * ancho + x;
+                pool.devolverCelda(celdas[index]);
+                celdas[index] = null;
+            }
+        }
+    }
 
     static void cargarloVacio() {
         Tablero tablero = new Tablero(Ajustes.ANCHO_TABLERO, Ajustes.ALTO_TABLERO);
-        for (int x = 0; x < Ajustes.ANCHO_TABLERO; x++)
-            for (int y = 0; y < Ajustes.ALTO_TABLERO; y++) {
-                Celda celda = tablero.obtenerCelda(x, y);
-            } // for
+        // Inicializar la cuadrícula espacial
+        SpatialGrid.obtenerInstancia().limpiar();
+        // Reconstruir con los seres actuales
+        SpatialGrid.obtenerInstancia().reconstruir();
     } // cargarlo
 
     static private void agregar (Ser ser) {

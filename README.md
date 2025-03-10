@@ -54,6 +54,21 @@ All simulation parameters are centralized in the `Ajustes` class, including:
 
 ## Recent Updates
 
+### Collection Optimization (March 2025)
+
+1. **ArrayList to LinkedList Conversion**
+   - Replaced `ArrayList` with `LinkedList` in specific methods where frequent additions and removals occur
+   - Modified `obtenerSeres()` and `todosLosSeres()` methods to use `LinkedList` for better performance
+   - Improved performance for operations that involve frequent modifications to collections
+
+### Cache Optimization (March 2025)
+
+1. **2D to 1D Array Conversion**
+   - Replaced the 2D array in `Tablero` class with a 1D array to improve cache locality
+   - Implemented a single index calculation formula: `position = y * width + x`
+   - Enhanced CPU cache utilization by storing grid elements in contiguous memory
+   - Reduced memory fragmentation and improved performance for grid traversal operations
+
 ### Code Quality Improvements
 
 1. **Class Renaming and Consolidation**
